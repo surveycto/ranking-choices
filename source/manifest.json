@@ -1,0 +1,8 @@
+{
+	"name" : "Ranking click-and-drag",
+	"author" : "Dobility",
+	"version": "1.0.1",
+	"supportedFieldTypes": ["select_multiple"],
+	"hideDefaultRequiredMessage": true,
+	"hideDefaultConstraintMessage": true
+}
