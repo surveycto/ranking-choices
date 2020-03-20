@@ -12,7 +12,7 @@ fieldProperties = {
         new fPChoice(1, 2, 'Choice 2'),
         new fPChoice(2, 3, 'Choice 3'),
     ],
-    "CURRENT_ANSWER": '1 2 3'
+    "CURRENT_ANSWER": '2 1 3'
 }
 
 class Choice {
@@ -51,7 +51,7 @@ for (let r = 0; r < numChoices; r++) {
     let thisChoice = choicesObj[choiceValue];
     let choiceLabel = thisChoice.label;
     let choiceDiv = '<tr><td>' + (r + 1) + '</td><td draggable="true" class="choice">\n'
-        + '<span class="spanChoice" id=choiceValue>' + choiceLabel + '</span></td></tr>\n';
+        + '<span class="spanChoice" id=' + choiceValue + '>' + choiceLabel + '</span></td></tr>\n';
     choicesHolder.innerHTML += choiceDiv;
 } //End FOR to display choices in the correct order
 
@@ -99,23 +99,10 @@ function moveStart(e) {
 }
 
 function moveEnter(e) {
-    //console.log("Entered choice " + choiceValue);
-    hoverValue++;
-    console.log("Increase: " + hoverValue);
-    /*if(lastMove == 'leave' && hoverValue > 1){
-        console.log("Setting back down: " + hoverValue)
-        hoverValue--;
-    }*/
-
-
-    if(hoverValue > 0){
-        this.classList.add('over');
-    }
-    check++;
-    lastMove = 'enter';
 }
 
 function moveDragOver(e) {
+    this.classList.add('over');
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
 
@@ -123,19 +110,10 @@ function moveDragOver(e) {
 }
 
 function moveLeave(e) {
-    hoverValue--;
-    if(hoverValue < 0){
-        hoverValue++;
-    }
-    if(hoverValue == 0){
-        this.classList.remove('over');
-    }
-    console.log("Decrease: " + hoverValue);
-    lastMove = 'leave';
+    this.classList.remove('over');
 }
 
 function moveDrop(e) {
-    console.log("Dropped " + e.target.innerText);
     if (e.stopPropagation) {
         e.stopPropagation(); // Stops some browsers from redirecting.
     }
@@ -151,7 +129,6 @@ function moveDrop(e) {
 }
 
 function moveEnd(e) {
-    console.log("Stopped moving " + e);
     [].forEach.call(choiceDivs, function (choice) {
         choice.classList.remove('over'); //Removes all moving styling when done moving. Applies to all, since otherwise the place it was moved to will not be turned back.
     });
@@ -182,14 +159,6 @@ function gatherAnswer() {
     //Puts the current list into an array in its current order.
     var choiceSpans = document.querySelectorAll('.spanChoice');
 
-    /*for (let i = 0; i < numChoices; i++) {
-        let choiceId = choiceSpans[i].id;
-        answer.push(choiceId);
-        fieldProperties.CHOICES[i].CHOICE_VALUE = choiceId;
-        console.log(i);
-        console.log(fieldProperties.CHOICES);
-    }
-    console.log(fieldProperties.CHOICES);*/
     [].forEach.call(choiceSpans, function (c) {
         answer.push(c.id);
     });
