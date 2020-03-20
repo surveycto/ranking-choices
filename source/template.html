@@ -1,16 +1,10 @@
-<!--link rel="stylesheet" type="text/css" href="style.css">
-<script src="script.js" defer></script-->
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="script.js" defer></script>
 <label class="label-container" for="inputField">{{{LABEL}}}</label>
 <span class="help-block">{{{HINT}}}</span>
 <div class="form-group" style="margin-bottom: 0px;">
     <em class="control-message"></em>
-    <div id="choices">
-        {{#CHOICES}}
-        <div draggable="true" class="choice">
-            <span class="spanChoice" id="{{CHOICE_VALUE}}">{{CHOICE_LABEL}}</span>
-        </div><br>
-        {{/CHOICES}}
-    </div>
+    <table id="choices" class="choicetable"></table>
 </div>
 
 <!--
@@ -20,4 +14,12 @@
         <div draggable="true" class="choice"><span class="spanChoice" id="{{CHOICE_VALUE}}2">Two</span class="spanChoice"></div><br>
         <div draggable="true" class="choice"><span class="spanChoice" id="{{CHOICE_VALUE}}3">Three</span></div><br>
         <div draggable="true" class="choice"><span class="spanChoice" id="{{CHOICE_VALUE}}4">Four</span></div><br>
+
+
+
+        {{#CHOICES}}
+        <div draggable="true" class="choice">
+            <span class="spanChoice" id="{{CHOICE_VALUE}}">{{CHOICE_LABEL}}</span>
+        </div><br>
+        {{/CHOICES}}
 -->

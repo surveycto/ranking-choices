@@ -49,14 +49,36 @@ body{
     box-shadow: none;
 }
 
+.choicecontainer.over{
+    background-color: #ff0000;
+}
+
 .choice{
     position: absolute;
     cursor: move;
     color: black;
+    padding: 10px;
 }
 
 .choice.over{
-    color: #047cc2;
+    background-color: #ff0000;
+}
+
+.choice:hover{
+    background-color: #047cc2;
+}
+
+.choicetable td{
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.choicetable tr{
+    padding-bottom: 5px;
+}
+
+.spanChoice{
+    /*border: 1px solid black;*/
 }
 
 .has-error em.control-message { /*Error area when there is an error*/

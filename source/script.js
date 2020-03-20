@@ -1,8 +1,64 @@
+class fPChoice {
+    constructor(index, value, label) {
+        this.CHOICE_INDEX = index;
+        this.CHOICE_VALUE = value;
+        this.CHOICE_LABEL = label;
+    }
+}
+
+fieldProperties = {
+    "CHOICES": [
+        new fPChoice(0, 1, 'Choice 1'),
+        new fPChoice(1, 2, 'Choice 2'),
+        new fPChoice(2, 3, 'Choice 3'),
+    ],
+    "CURRENT_ANSWER": '1 2 3'
+}
+
+class Choice {
+    constructor(index, label) {
+        this.index = index;
+        this.label = label;
+    }
+}
+
+function setAnswer(ans) {
+    console.log("Set answer to: " + ans);
+}
+
+//Above for testing only*/
+
 var formGroup = document.querySelector('.form-group');
 var controlMessage = document.querySelector('.control-message');
-var choices = document.querySelectorAll('.choice');
+var choices = fieldProperties.CHOICES
 var choicesHolder = document.querySelector('#choices');
 var numChoices = choices.length;
+var orderStartSpaces = fieldProperties.CURRENT_ANSWER;
+var orderStart = orderStartSpaces.match(/[^ ]+/g);
+var hoverValue = 0;
+
+//This creates an object of the choices so they can later be displayed in the proper order.
+var choicesObj = {};
+for (let c = 0; c < numChoices; c++) {
+    let value = choices[c].CHOICE_VALUE;
+    let label = choices[c].CHOICE_LABEL;
+    choicesObj[value] = new Choice(c, label);
+}
+
+//Used to display the choices in the correct order
+for (let r = 0; r < numChoices; r++) {
+    let choiceValue = orderStart[r];
+    let thisChoice = choicesObj[choiceValue];
+    let choiceLabel = thisChoice.label;
+    let choiceDiv = '<tr><td>' + (r + 1) + '</td><td draggable="true" class="choice">\n'
+        + '<span class="spanChoice" id=choiceValue>' + choiceLabel + '</span></td></tr>\n';
+    choicesHolder.innerHTML += choiceDiv;
+} //End FOR to display choices in the correct order
+
+var choiceDivs = document.querySelectorAll('.choice');
+
+
+
 
 function clearAnswer() {
     choicesHolder.innerHTML =
@@ -25,9 +81,14 @@ function handleRequiredMessage(message) {
 }
 
 
+
+
+
 ////////////////////
 //Dragging and dropping
 //Thanks to https://www.html5rocks.com/en/tutorials/dnd/basics/
+var check = 0;
+var lastMove;
 
 var dragSrcEl = null
 function moveStart(e) {
@@ -38,7 +99,20 @@ function moveStart(e) {
 }
 
 function moveEnter(e) {
-    this.classList.add('over');
+    //console.log("Entered choice " + choiceValue);
+    hoverValue++;
+    console.log("Increase: " + hoverValue);
+    /*if(lastMove == 'leave' && hoverValue > 1){
+        console.log("Setting back down: " + hoverValue)
+        hoverValue--;
+    }*/
+
+
+    if(hoverValue > 0){
+        this.classList.add('over');
+    }
+    check++;
+    lastMove = 'enter';
 }
 
 function moveDragOver(e) {
@@ -49,10 +123,19 @@ function moveDragOver(e) {
 }
 
 function moveLeave(e) {
-    this.classList.remove('over');
+    hoverValue--;
+    if(hoverValue < 0){
+        hoverValue++;
+    }
+    if(hoverValue == 0){
+        this.classList.remove('over');
+    }
+    console.log("Decrease: " + hoverValue);
+    lastMove = 'leave';
 }
 
 function moveDrop(e) {
+    console.log("Dropped " + e.target.innerText);
     if (e.stopPropagation) {
         e.stopPropagation(); // Stops some browsers from redirecting.
     }
@@ -68,7 +151,8 @@ function moveDrop(e) {
 }
 
 function moveEnd(e) {
-    [].forEach.call(choices, function (choice) {
+    console.log("Stopped moving " + e);
+    [].forEach.call(choiceDivs, function (choice) {
         choice.classList.remove('over'); //Removes all moving styling when done moving. Applies to all, since otherwise the place it was moved to will not be turned back.
     });
     gatherAnswer();
@@ -77,7 +161,7 @@ function moveEnd(e) {
 
 var selected = null;
 function choiceTouched(e) {
-    [].forEach.call(choices, function (choice) {
+    [].forEach.call(choiceDivs, function (choice) {
         choice.classList.remove('over');
     });
     if (selected == null) {
@@ -113,7 +197,7 @@ function gatherAnswer() {
     setAnswer(joinedAnswer);
 }
 
-[].forEach.call(choices, function (choice) {
+[].forEach.call(choiceDivs, function (choice) {
     choice.addEventListener('dragstart', moveStart, false);
     choice.addEventListener('dragenter', moveEnter, false);
     choice.addEventListener('dragover', moveDragOver, false);
