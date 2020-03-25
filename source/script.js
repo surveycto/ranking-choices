@@ -71,8 +71,6 @@ else {
 }
 
 
-
-
 function dispChoices(orderStart) {
     if (orderStart == null) { //If empty, then should show in original order
         orderStart = [];
@@ -133,10 +131,39 @@ function boxHeightAdjuster() {
 ////////////////////
 //Dragging and dropping
 //Thanks to https://www.html5rocks.com/en/tutorials/dnd/basics/
-var check = 0;
-var lastMove;
+var selectedTd = null;
 
 var dragSrcEl = null
+function clicked(e) {
+    console.log("Clicked:")
+    console.log(e.target)
+    let target = e.target
+    if (selectedTd == null) {
+        selectedTd = target;
+        selectedTd.classList.add('dragged');
+    }
+    else {
+        target.classList.add('over');
+        window.setTimeout(
+            function () {
+                try {
+                    let hold = selectedTd.innerHTML;
+                    selectedTd.innerHTML = target.innerHTML;
+                    target.innerHTML = hold;
+                    selectedTd.classList.remove('over');
+                    selectedTd = null;
+                    removeSelectedFormatting();
+                }
+                catch (e) {
+                    console.log("Error " + e);
+                    console.log(selectedTd)
+                }
+            },
+            200);
+    }
+}
+
+
 function moveStart(e) {
     //this.style.opacity = '.4'; //Makes it more clear while being moved.
     dragSrcEl = this;
@@ -189,7 +216,6 @@ var yStart;
 var xPos;
 var yPos;
 var moving = false
-var tapped = null;
 
 function removeSelectedFormatting() {
     for (let i = 0; i < numChoices; i++) {
@@ -210,9 +236,9 @@ function touchStart(e) {
     else {
         touchedChoice = e.target;
     }
-    if (tapped == null) {
+    if (selectedTd == null) {
         removeSelectedFormatting();
-        tapped = touchedChoice;
+        selectedTd = touchedChoice;
 
         xStart = touchedChoice.style.left;
         yStart = touchedChoice.style.top;
@@ -223,17 +249,17 @@ function touchStart(e) {
         window.setTimeout(
             function () {
                 try {
-                    let hold = tapped.innerHTML;
-                    tapped.innerHTML = touchedChoice.innerHTML;
+                    let hold = selectedTd.innerHTML;
+                    selectedTd.innerHTML = touchedChoice.innerHTML;
                     touchedChoice.innerHTML = hold;
-                    tapped.classList.remove('over');
-                    tapped = null;
+                    selectedTd.classList.remove('over');
+                    selectedTd = null;
 
                     removeSelectedFormatting();
                 }
                 catch (e) {
                     console.log("Error " + e);
-                    console.log(tapped)
+                    console.log(selectedTd)
                 }
             },
             200);
@@ -242,7 +268,7 @@ function touchStart(e) {
 }
 function touchMove(e) {
     //console.log("Touch move")
-    tapped = null;
+    selectedTd = null;
     var touchedChoice;
     if (e.target.tagName == 'DIV') {
         touchedChoice = e.path[1];
@@ -310,7 +336,7 @@ function touchEnd(e) {
 
     gatherAnswer();
 
-    if (tapped == null) {
+    if (selectedTd == null) {
         for (let i = 0; i < numChoices; i++) {
             choiceTds[i].classList.remove('dragged');
             choiceTds[i].classList.remove('over');
@@ -322,9 +348,6 @@ function touchEnd(e) {
     //Below sets it back if not hovering over another td
     touchedChoice.style.left = xStart;
     touchedChoice.style.top = yStart;
-
-    //getChoicePos();
-
 }
 
 function touchingOther() {
@@ -373,26 +396,11 @@ function getChoicePos() {
     }
 }
 
-/*[].forEach.call(choiceTds, function (choice) {
-    if (isWebCollect) {
-        choice.addEventListener('dragstart', moveStart, false);
-        choice.addEventListener('dragenter', moveEnter, false);
-        choice.addEventListener('dragover', moveDragOver, false);
-        choice.addEventListener('dragleave', moveLeave, false);
-        choice.addEventListener('drop', moveDrop, false);
-        choice.addEventListener('dragend', moveEnd, false);
-    }
-
-    choice.addEventListener('touchstart', touchStart, false);
-    choice.addEventListener('touchmove', touchMove, false);
-    choice.addEventListener('touchend', touchEnd, false);
-    choice.addEventListener('touchcancel', touchCancel, false);
-
-});*/
-
 for (let c = 0; c < numChoices; c++) {
     let choice = choiceTds[c];
     if (isWebCollect) {
+        choice.addEventListener('click', clicked, false);
+
         choice.addEventListener('dragstart', moveStart, false);
         choice.addEventListener('dragenter', moveEnter, false);
         choice.addEventListener('dragover', moveDragOver, false);
@@ -406,23 +414,3 @@ for (let c = 0; c < numChoices; c++) {
     choice.addEventListener('touchend', touchEnd, false);
     choice.addEventListener('touchcancel', touchCancel, false);
 }
-
-/*document.addEventListener('mousemove', function(e){
-    console.log('(' + e.x + ',' + e.y + ')');
-});
-
-/*
-buttonAreas
-(3) [Array(4), Array(4), Array(4)]
-0: (4) [24, 536, 2, 122]
-1: (4) [24, 536, 124, 244]
-2: (4) [24, 536, 246, 366]
-length: 3
-__proto__: Array(0)
-
-70
-190
-313
-433
-
-*/
