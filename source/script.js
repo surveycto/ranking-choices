@@ -1,4 +1,4 @@
-/*class fPChoice {
+class fPChoice {
     constructor(index, value, label) {
         this.CHOICE_INDEX = index;
         this.CHOICE_VALUE = value;
@@ -8,9 +8,9 @@
 
 fieldProperties = {
     "CHOICES": [
-        new fPChoice(0, 1, 'Choice 1'),
-        new fPChoice(1, 2, 'Choice 2'),
-        new fPChoice(2, 3, 'Choice 3'),
+        new fPChoice(0, 0, 'Choice 1'),
+        new fPChoice(1, 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempornsequat. xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempornsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+        new fPChoice(2, 2, 'Choice 3'),
     ],
     "METADATA": null
 }
@@ -19,11 +19,11 @@ function setAnswer(ans) {
     console.log("Set answer to: " + ans);
 }
 
-function setMetaData(string){
+function setMetaData(string) {
     fieldProperties.METADATA = string;
 }
 
-function getMetaData(){
+function getMetaData() {
     return fieldProperties.METADATA;
 }
 
@@ -34,17 +34,20 @@ class Choice {
     }
 }
 
+document.body.classList.add('web-collect');
 //Above for testing only*/
 
+var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
+var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
+var isIOS = (document.body.className.indexOf("ios-collect") >= 0);
 
 var formGroup = document.querySelector('.form-group');
 var controlMessage = document.querySelector('.control-message');
 var choices = fieldProperties.CHOICES
 var choicesHolder = document.querySelector('#choices');
+var choiceRows, choiceTds;
 var numChoices = choices.length;
 var orderStartSpaces = getMetaData();
-
-console.log("Current answer: " + orderStartSpaces);
 
 var hoverValue = 0;
 var buttonAreas = [];
@@ -68,16 +71,12 @@ else {
 }
 
 
-var choiceTds = document.querySelectorAll('.choice');
-getChoicePos();
 
 
-function dispChoices(orderStart){
-    console.log(orderStart);
-    if(orderStart == null){ //If empty, then should show in original order
-        console.log("Start blank");
+function dispChoices(orderStart) {
+    if (orderStart == null) { //If empty, then should show in original order
         orderStart = [];
-        for(let i = 0; i < numChoices; i++){
+        for (let i = 0; i < numChoices; i++) {
             orderStart.push(choices[i].CHOICE_VALUE);
         }
     }
@@ -86,10 +85,18 @@ function dispChoices(orderStart){
         let choiceValue = orderStart[r];
         let thisChoice = choicesObj[choiceValue];
         let choiceLabel = thisChoice.label;
-        let choiceDiv = '<tr><td class="rank">' + (r + 1) + '</td><td draggable="true" class="choice">\n'
+        let choiceDiv = '<tr><td class="rank">' + (r + 1) + '</td><td draggable="true" class="choice';
+
+        if (isWebCollect) { choiceDiv += ' webcollect'; }
+
+        choiceDiv += '">\n'
             + '<div class="spanChoice" id=' + choiceValue + '>' + choiceLabel + '</div></td></tr>\n';
         choicesHolder.innerHTML += choiceDiv;
     } //End FOR to display choices in the correct order
+    choiceRows = document.querySelector('#choices').querySelectorAll('tr');
+    choiceTds = document.querySelectorAll('.choice');
+    boxHeightAdjuster();
+    getChoicePos();
 }
 
 function clearAnswer() {
@@ -107,6 +114,18 @@ function handleRequiredMessage(message) {
     handleConstraintMessage(message)
 }
 
+
+function boxHeightAdjuster() {
+    let allHeights = [];
+    for (let i = 0; i < numChoices; i++) {
+        allHeights.push(choiceTds[i].offsetHeight);
+    }
+    let topHeight = Math.max(...allHeights);
+
+    for (let i = 0; i < numChoices; i++) {
+        choiceRows[i].style.height = topHeight;
+    }
+}
 
 
 
@@ -129,7 +148,6 @@ function moveEnter(e) {
 }
 
 function moveDragOver(e) {
-    console.log("Over");
     this.classList.add('over');
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
@@ -165,35 +183,77 @@ function moveEnd(e) {
 
 
 
-function resetZ() {
-    for (var i = numChoices - 1; i >= 0; i--) {
-        choiceTds[i].style.zIndex = 5;
-    };
-}
-
+/////Touchscreen
 var xStart;
 var yStart;
 var xPos;
 var yPos;
 var moving = false
-var test;
+var tapped = null;
+
+function removeSelectedFormatting() {
+    for (let i = 0; i < numChoices; i++) {
+        choiceTds[i].classList.remove('dragged');
+        choiceTds[i].classList.remove('over');
+    }
+}
 
 function touchStart(e) {
-    var touchedChoice = e.target;
-    xStart = touchedChoice.style.left;
-    yStart = touchedChoice.style.top;
-    touchedChoice.classList.add('dragged');
-
-}
-function touchMove(e) {
+    //console.log("Touch start")
     var touchedChoice;
-
-    if (e.target.tagName = 'DIV') {
+    if (e.target.tagName == 'DIV') {
         touchedChoice = e.path[1];
+    }
+    else if (e.target.tagName == 'TR') {
+        touchedChoice = e.target.querySelector('.choice');
     }
     else {
         touchedChoice = e.target;
     }
+    if (tapped == null) {
+        removeSelectedFormatting();
+        tapped = touchedChoice;
+
+        xStart = touchedChoice.style.left;
+        yStart = touchedChoice.style.top;
+        touchedChoice.classList.add('dragged');
+    }
+    else {
+        touchedChoice.classList.add('over');
+        window.setTimeout(
+            function () {
+                try {
+                    let hold = tapped.innerHTML;
+                    tapped.innerHTML = touchedChoice.innerHTML;
+                    touchedChoice.innerHTML = hold;
+                    tapped.classList.remove('over');
+                    tapped = null;
+
+                    removeSelectedFormatting();
+                }
+                catch (e) {
+                    console.log("Error " + e);
+                    console.log(tapped)
+                }
+            },
+            200);
+
+    }
+}
+function touchMove(e) {
+    //console.log("Touch move")
+    tapped = null;
+    var touchedChoice;
+    if (e.target.tagName == 'DIV') {
+        touchedChoice = e.path[1];
+    }
+    else if (e.target.tagName == 'TR') {
+        touchedChoice = e.target.querySelector('.choice');
+    }
+    else {
+        touchedChoice = e.target;
+    }
+
     if (!moving) {
         xStart = touchedChoice.style.left;
         yStart = touchedChoice.style.top;
@@ -215,21 +275,25 @@ function touchMove(e) {
 
     var touching = touchingOther();
     for (let i = 0; i < numChoices; i++) {
-        if (touching == i) {
-            choiceTds[i].classList.add('over');
-            choiceTds[i].style.zIndex = 0;
+        let locChoice = choiceTds[i];
+        if ((touching == i) && (!locChoice.classList.contains('dragged'))) {
+            locChoice.classList.add('over');
+            locChoice.style.zIndex = 0;
         }
         else {
-            choiceTds[i].classList.remove('over');
+            locChoice.classList.remove('over');
         }
     }
 }
 function touchEnd(e) {
-
+    //console.log("Touch end")
     var touchedChoice;
 
-    if (e.target.tagName = 'DIV') {
+    if (e.target.tagName == 'DIV') {
         touchedChoice = e.path[1];
+    }
+    else if (e.target.tagName == 'TR') {
+        touchedChoice = e.target.querySelector('.choice');
     }
     else {
         touchedChoice = e.target;
@@ -246,9 +310,11 @@ function touchEnd(e) {
 
     gatherAnswer();
 
-    for (let i = 0; i < numChoices; i++) {
-        choiceTds[i].classList.remove('dragged');
-        choiceTds[i].classList.remove('over');
+    if (tapped == null) {
+        for (let i = 0; i < numChoices; i++) {
+            choiceTds[i].classList.remove('dragged');
+            choiceTds[i].classList.remove('over');
+        }
     }
 
     moving = false;
@@ -257,7 +323,7 @@ function touchEnd(e) {
     touchedChoice.style.left = xStart;
     touchedChoice.style.top = yStart;
 
-    getChoicePos();
+    //getChoicePos();
 
 }
 
@@ -265,7 +331,6 @@ function touchingOther() {
 
     for (let i = 0; i < numChoices; i++) {
         let thisArea = buttonAreas[i];
-
 
         if (((xPos > thisArea[0]) && (xPos < thisArea[1])) &&
             ((yPos > thisArea[2]) && (yPos < thisArea[3]))) {
@@ -291,7 +356,6 @@ function gatherAnswer() {
         answer.push(c.id);
     });
     let joinedAnswer = answer.join(' ');
-    console.log("Gathered answer: " + joinedAnswer);
 
     setAnswer(joinedAnswer);
     setMetaData(joinedAnswer);
@@ -299,26 +363,66 @@ function gatherAnswer() {
 
 function getChoicePos() {
     for (let i = 0; i < numChoices; i++) {
-        let td = choiceTds[i];
+        let tdRect = choiceTds[i].getBoundingClientRect();
         let tdDim = [];
-        tdDim[0] = td.offsetLeft;
-        tdDim[1] = tdDim[0] + td.offsetWidth;
-        tdDim[2] = td.offsetTop;
-        tdDim[3] = tdDim[2] + td.offsetHeight;
+        tdDim[0] = tdRect.left;
+        tdDim[1] = tdRect.right;
+        tdDim[2] = tdRect.top;
+        tdDim[3] = tdRect.bottom;
         buttonAreas[i] = tdDim;
     }
 }
 
-[].forEach.call(choiceTds, function (choice) {
-    choice.addEventListener('dragstart', moveStart, false);
-    choice.addEventListener('dragenter', moveEnter, false);
-    choice.addEventListener('dragover', moveDragOver, false);
-    choice.addEventListener('dragleave', moveLeave, false);
-    choice.addEventListener('drop', moveDrop, false);
-    choice.addEventListener('dragend', moveEnd, false);
+/*[].forEach.call(choiceTds, function (choice) {
+    if (isWebCollect) {
+        choice.addEventListener('dragstart', moveStart, false);
+        choice.addEventListener('dragenter', moveEnter, false);
+        choice.addEventListener('dragover', moveDragOver, false);
+        choice.addEventListener('dragleave', moveLeave, false);
+        choice.addEventListener('drop', moveDrop, false);
+        choice.addEventListener('dragend', moveEnd, false);
+    }
 
-    //choice.addEventListener('touchstart', touchStart, false);
+    choice.addEventListener('touchstart', touchStart, false);
     choice.addEventListener('touchmove', touchMove, false);
     choice.addEventListener('touchend', touchEnd, false);
     choice.addEventListener('touchcancel', touchCancel, false);
+
+});*/
+
+for (let c = 0; c < numChoices; c++) {
+    let choice = choiceTds[c];
+    if (isWebCollect) {
+        choice.addEventListener('dragstart', moveStart, false);
+        choice.addEventListener('dragenter', moveEnter, false);
+        choice.addEventListener('dragover', moveDragOver, false);
+        choice.addEventListener('dragleave', moveLeave, false);
+        choice.addEventListener('drop', moveDrop, false);
+        choice.addEventListener('dragend', moveEnd, false);
+    }
+
+    choice.addEventListener('touchstart', touchStart, false);
+    choice.addEventListener('touchmove', touchMove, false);
+    choice.addEventListener('touchend', touchEnd, false);
+    choice.addEventListener('touchcancel', touchCancel, false);
+}
+
+/*document.addEventListener('mousemove', function(e){
+    console.log('(' + e.x + ',' + e.y + ')');
 });
+
+/*
+buttonAreas
+(3) [Array(4), Array(4), Array(4)]
+0: (4) [24, 536, 2, 122]
+1: (4) [24, 536, 124, 244]
+2: (4) [24, 536, 246, 366]
+length: 3
+__proto__: Array(0)
+
+70
+190
+313
+433
+
+*/
