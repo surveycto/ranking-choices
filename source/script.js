@@ -34,7 +34,7 @@ class Choice {
     }
 }
 
-document.body.classList.add('web-collect');
+document.body.classList.add('android-collect');
 //Above for testing only*/
 
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
@@ -112,7 +112,7 @@ function handleRequiredMessage(message) {
     handleConstraintMessage(message)
 }
 
-
+//Changes each box's height to be as tall as the tallest one so that no box is dominant
 function boxHeightAdjuster() {
     let allHeights = [];
     for (let i = 0; i < numChoices; i++) {
@@ -133,8 +133,7 @@ function boxHeightAdjuster() {
 //Thanks to https://www.html5rocks.com/en/tutorials/dnd/basics/
 var selectedTd = null;
 
-var dragSrcEl = null
-function clicked(e) {
+function clicked(e) { //For click-select to swap
     console.log("Clicked:")
     console.log(e.target)
     let target = e.target
@@ -159,30 +158,31 @@ function clicked(e) {
                     console.log(selectedTd)
                 }
             },
-            200);
+            200); //Delay so that it is easier to see what is being swapped based on color
     }
 }
 
 
-function moveStart(e) {
+var dragSrcEl = null
+function dragStart(e) {
     //this.style.opacity = '.4'; //Makes it more clear while being moved.
     dragSrcEl = this;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this.innerHTML);
 }
 
-function moveEnter(e) {
-}
+/*function dragEnter(e) {
+}*/
 
-function moveDragOver(e) {
-    this.classList.add('over');
+function dragOver(e) {
     e.preventDefault();
+    this.classList.add('over');
     e.dataTransfer.dropEffect = 'move';
 
     return false;
 }
 
-function moveLeave(e) {
+function dragLeave(e) {
     this.classList.remove('over');
 }
 
@@ -201,7 +201,7 @@ function moveDrop(e) {
     return false;
 }
 
-function moveEnd(e) {
+function dragEnd(e) {
     [].forEach.call(choiceTds, function (choice) {
         choice.classList.remove('over'); //Removes all moving styling when done moving. Applies to all, since otherwise the place it was moved to will not be turned back.
     });
@@ -209,10 +209,9 @@ function moveEnd(e) {
 }
 
 
-
 /////Touchscreen
-var xStart;
-var yStart;
+/*var xStart;
+var yStart;*/ //xStart and yStart is used when dragging on touchscreen shows the choice being dragged with the finger, but this does not work in SurveyCTO Collect right now, so not being used.
 var xPos;
 var yPos;
 var moving = false
@@ -227,7 +226,7 @@ function removeSelectedFormatting() {
 function touchStart(e) {
     //console.log("Touch start")
     var touchedChoice;
-    if (e.target.tagName == 'DIV') {
+    if (e.target.tagName == 'DIV') { //Chain of IFs ensures the TD is selected, and not anything above or below
         touchedChoice = e.path[1];
     }
     else if (e.target.tagName == 'TR') {
@@ -236,12 +235,13 @@ function touchStart(e) {
     else {
         touchedChoice = e.target;
     }
-    if (selectedTd == null) {
+
+    if (selectedTd == null) { //For tap-select instead of dragging, starts only if another choice has not yet been selected
         removeSelectedFormatting();
         selectedTd = touchedChoice;
 
-        xStart = touchedChoice.style.left;
-        yStart = touchedChoice.style.top;
+        /*xStart = touchedChoice.style.left;
+        yStart = touchedChoice.style.top;*/
         touchedChoice.classList.add('dragged');
     }
     else {
@@ -280,10 +280,10 @@ function touchMove(e) {
         touchedChoice = e.target;
     }
 
-    if (!moving) {
+    /*if (!moving) {
         xStart = touchedChoice.style.left;
         yStart = touchedChoice.style.top;
-    }
+    }*/
 
     moving = true;
 
@@ -346,12 +346,12 @@ function touchEnd(e) {
     moving = false;
 
     //Below sets it back if not hovering over another td
-    touchedChoice.style.left = xStart;
-    touchedChoice.style.top = yStart;
+    /*touchedChoice.style.left = xStart;
+    touchedChoice.style.top = yStart;*/
 }
 
+//Checks if the dragged choice is touching another choice
 function touchingOther() {
-
     for (let i = 0; i < numChoices; i++) {
         let thisArea = buttonAreas[i];
 
@@ -359,13 +359,11 @@ function touchingOther() {
             ((yPos > thisArea[2]) && (yPos < thisArea[3]))) {
             return i;
         }
-
     }
     return -1;
 }
 
 function touchCancel(e) {
-    console.log("touchCancel");
 }
 
 
@@ -401,12 +399,12 @@ for (let c = 0; c < numChoices; c++) {
     if (isWebCollect) {
         choice.addEventListener('click', clicked, false);
 
-        choice.addEventListener('dragstart', moveStart, false);
-        choice.addEventListener('dragenter', moveEnter, false);
-        choice.addEventListener('dragover', moveDragOver, false);
-        choice.addEventListener('dragleave', moveLeave, false);
+        choice.addEventListener('dragstart', dragStart, false);
+        //choice.addEventListener('dragenter', dragEnter, false);
+        choice.addEventListener('dragover', dragOver, false);
+        choice.addEventListener('dragleave', dragLeave, false);
         choice.addEventListener('drop', moveDrop, false);
-        choice.addEventListener('dragend', moveEnd, false);
+        choice.addEventListener('dragend', dragEnd, false);
     }
 
     choice.addEventListener('touchstart', touchStart, false);
