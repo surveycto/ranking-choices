@@ -34,7 +34,7 @@ class Choice {
     }
 }
 
-document.body.classList.add('android-collect');
+document.body.classList.add('web-collect');
 //Above for testing only*/
 
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
@@ -88,7 +88,7 @@ function dispChoices(orderStart) {
         if (isWebCollect) { choiceDiv += ' webcollect'; }
 
         choiceDiv += '">\n'
-            + '<div class="spanChoice" id=' + choiceValue + '>' + choiceLabel + '</div></td></tr>\n';
+            + '<div class="choiceDiv" id=' + choiceValue + '>' + choiceLabel + '</div></td></tr>\n';
         choicesHolder.innerHTML += choiceDiv;
     } //End FOR to display choices in the correct order
     choiceRows = document.querySelector('#choices').querySelectorAll('tr');
@@ -328,7 +328,7 @@ function touchEnd(e) {
 
     var touching = touchingOther(touchedChoice);
 
-    if ((touching != -1) && moving) {
+    if ((touching != -1) && moving) { //The "moving" var prevents occasional issues where tapping the same choice twice in a row prevents it from moving in the future.
         var draggedHTML = touchedChoice.innerHTML;
         touchedChoice.innerHTML = choiceTds[touching].innerHTML;
         choiceTds[touching].innerHTML = draggedHTML;
@@ -337,20 +337,17 @@ function touchEnd(e) {
     gatherAnswer();
 
     if (selectedTd == null) {
-        for (let i = 0; i < numChoices; i++) {
-            choiceTds[i].classList.remove('dragged');
-            choiceTds[i].classList.remove('over');
-        }
+        removeSelectedFormatting();
     }
 
     moving = false;
 
-    //Below sets it back if not hovering over another td
+    //Below puts the box back where it was
     /*touchedChoice.style.left = xStart;
     touchedChoice.style.top = yStart;*/
 }
 
-//Checks if the dragged choice is touching another choice
+//Checks if the dragged choice is over another choice so it can be highlighted and swapped
 function touchingOther() {
     for (let i = 0; i < numChoices; i++) {
         let thisArea = buttonAreas[i];
@@ -363,15 +360,15 @@ function touchingOther() {
     return -1;
 }
 
-function touchCancel(e) {
-}
+/*function touchCancel(e) {
+}*/
 
 
 
 function gatherAnswer() {
     let answer = [];
     //Puts the current list into an array in its current order.
-    var choiceSpans = document.querySelectorAll('.spanChoice');
+    var choiceSpans = document.querySelectorAll('.choiceDiv');
 
     [].forEach.call(choiceSpans, function (c) {
         answer.push(c.id);
@@ -410,5 +407,5 @@ for (let c = 0; c < numChoices; c++) {
     choice.addEventListener('touchstart', touchStart, false);
     choice.addEventListener('touchmove', touchMove, false);
     choice.addEventListener('touchend', touchEnd, false);
-    choice.addEventListener('touchcancel', touchCancel, false);
+    //choice.addEventListener('touchcancel', touchCancel, false);
 }
