@@ -160,14 +160,17 @@ function clicked(e) { //For click-select to swap
                     selectedTd.classList.remove('over');
                     selectedTd = null;
                     removeSelectedFormatting();
+                    gatherAnswer();
                 }
                 catch (e) {
-                    console.log("Error " + e);
+                    console.log(e);
                     console.log(selectedTd)
                 }
             },
             200); //Delay so that it is easier to see what is being swapped based on color
     }
+    event.stopPropagation();
+    event.preventDefault();
 }
 
 
@@ -356,9 +359,9 @@ function getChoicePos() {
 
 for (let c = 0; c < numChoices; c++) {
     let choice = choiceTds[c];
-    choice.addEventListener('click', clicked, false);
 
     if (isWebCollect) {
+        choice.addEventListener('click', clicked, false);
         choice.addEventListener('dragstart', dragStart, false);
         //choice.addEventListener('dragenter', dragEnter, false);
         choice.addEventListener('dragover', dragOver, false);
@@ -367,7 +370,7 @@ for (let c = 0; c < numChoices; c++) {
         choice.addEventListener('dragend', dragEnd, false);
     }
 
-    //choice.addEventListener('touchstart', clicked, false);
+    choice.addEventListener('touchstart', clicked, false);
     choice.addEventListener('touchmove', touchMove, false);
     choice.addEventListener('touchend', touchEnd, false);
     //choice.addEventListener('touchcancel', touchCancel, false);
