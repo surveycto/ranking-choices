@@ -301,7 +301,9 @@ function touchEnd(e) {
         choiceTds[touching].innerHTML = draggedHTML;
     }
 
-    gatherAnswer();
+    if(selectedTd == null){ //This way, if a TD is selected, it does not gather the answer and remove the formatting yet
+        gatherAnswer();
+    }
 
     if (selectedTd == null) {
         removeSelectedFormatting();
@@ -343,6 +345,8 @@ function gatherAnswer() {
 
     setAnswer(joinedAnswer);
     setMetaData(joinedAnswer);
+    selectedTd = null; //Undoes having a selected TD in case one was clicked before deciding to drag instead
+    removeSelectedFormatting();
 }
 
 function getChoicePos() {
