@@ -134,9 +134,17 @@ function boxHeightAdjuster() {
 var selectedTd = null;
 
 function clicked(e) { //For click-select to swap
-    console.log("Clicked:")
-    console.log(e.target)
-    let target = e.target
+    var target;
+    if (e.target.tagName == 'DIV') { //Chain of IFs ensures the TD is selected, and not anything above or below
+        target = e.path[1];
+    }
+    else if (e.target.tagName == 'TR') {
+        target = e.target.querySelector('.choice');
+    }
+    else {
+        target = e.target;
+    }
+
     if (selectedTd == null) {
         selectedTd = target;
         selectedTd.classList.add('dragged');
@@ -223,49 +231,6 @@ function removeSelectedFormatting() {
     }
 }
 
-function touchStart(e) {
-    //console.log("Touch start")
-    var touchedChoice;
-    if (e.target.tagName == 'DIV') { //Chain of IFs ensures the TD is selected, and not anything above or below
-        touchedChoice = e.path[1];
-    }
-    else if (e.target.tagName == 'TR') {
-        touchedChoice = e.target.querySelector('.choice');
-    }
-    else {
-        touchedChoice = e.target;
-    }
-
-    if (selectedTd == null) { //For tap-select instead of dragging, starts only if another choice has not yet been selected
-        removeSelectedFormatting();
-        selectedTd = touchedChoice;
-
-        /*xStart = touchedChoice.style.left;
-        yStart = touchedChoice.style.top;*/
-        touchedChoice.classList.add('dragged');
-    }
-    else {
-        touchedChoice.classList.add('over');
-        window.setTimeout(
-            function () {
-                try {
-                    let hold = selectedTd.innerHTML;
-                    selectedTd.innerHTML = touchedChoice.innerHTML;
-                    touchedChoice.innerHTML = hold;
-                    selectedTd.classList.remove('over');
-                    selectedTd = null;
-
-                    removeSelectedFormatting();
-                }
-                catch (e) {
-                    console.log("Error " + e);
-                    console.log(selectedTd)
-                }
-            },
-            200);
-
-    }
-}
 function touchMove(e) {
     //console.log("Touch move")
     selectedTd = null;
@@ -279,7 +244,6 @@ function touchMove(e) {
     else {
         touchedChoice = e.target;
     }
-
     /*if (!moving) {
         xStart = touchedChoice.style.left;
         yStart = touchedChoice.style.top;
@@ -368,8 +332,7 @@ function touchingOther() {
 function gatherAnswer() {
     let answer = [];
     //Puts the current list into an array in its current order.
-    var choiceSpans = document.querySelectorAll('.choiceDiv');
-
+    let choiceSpans = document.querySelectorAll('.choiceDiv');
     [].forEach.call(choiceSpans, function (c) {
         answer.push(c.id);
     });
@@ -393,9 +356,9 @@ function getChoicePos() {
 
 for (let c = 0; c < numChoices; c++) {
     let choice = choiceTds[c];
-    if (isWebCollect) {
-        choice.addEventListener('click', clicked, false);
+    choice.addEventListener('click', clicked, false);
 
+    if (isWebCollect) {
         choice.addEventListener('dragstart', dragStart, false);
         //choice.addEventListener('dragenter', dragEnter, false);
         choice.addEventListener('dragover', dragOver, false);
@@ -404,7 +367,7 @@ for (let c = 0; c < numChoices; c++) {
         choice.addEventListener('dragend', dragEnd, false);
     }
 
-    choice.addEventListener('touchstart', touchStart, false);
+    //choice.addEventListener('touchstart', clicked, false);
     choice.addEventListener('touchmove', touchMove, false);
     choice.addEventListener('touchend', touchEnd, false);
     //choice.addEventListener('touchcancel', touchCancel, false);

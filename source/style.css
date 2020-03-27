@@ -59,13 +59,12 @@ body{
     height: 35px;
 }
 
-td.dragged{
-    background-color: #047cc2;
+td.choice.over{
+    background-color: #639c33;
 }
 
-
-td.choice.over{
-    background-color: #ff0000;
+td.dragged{
+    background-color: #047cc2;
 }
 
 .webcollect:hover{
@@ -85,10 +84,10 @@ td.choice.over{
     padding-bottom: 5px;
 }
 
-.spanChoice{
-    /*border: 1px solid black;*/
-    position: relative;
-}
+/*.spanChoice{
+    border: 1px solid black;
+    position: relative; 
+}*/
 
 
 .has-error em.control-message { /*Error area when there is an error*/
