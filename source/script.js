@@ -90,13 +90,13 @@ function dispChoices(orderStart) {
         let choiceValue = orderStart[r];
         let thisChoice = choicesObj[choiceValue];
         let choiceLabel = unEntity(thisChoice.label);
-        let choiceDiv = '<tr><td class="rank">' + (r + 1) + '</td><td draggable="true" class="choice';
+        let choiceTdLoc = '<tr><td class="rank">' + (r + 1) + '</td><td draggable="true" class="choice';
 
-        if (isWebCollect) { choiceDiv += ' webcollect'; }
+        if (isWebCollect) { choiceTdLoc += ' webcollect'; }
 
-        choiceDiv += '">\n'
+        choiceTdLoc += '">\n'
             + '<div class="choiceDiv" id=' + choiceValue + '>' + choiceLabel + '</div></td></tr>\n';
-        choicesHolder.innerHTML += choiceDiv;
+        choicesHolder.innerHTML += choiceTdLoc;
     } //End FOR to display choices in the correct order
     choiceRows = document.querySelector('#choices').querySelectorAll('tr'); //Gathered for later adjusting box height
     choiceTds = document.querySelectorAll('.choice');
