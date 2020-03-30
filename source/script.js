@@ -63,6 +63,9 @@ var parameters = fieldProperties.PARAMETERS;
 var hoverValue = 0;
 var buttonAreas = [];
 
+label.innerHTML = unEntity(fieldProperties.LABEL);
+hint.innerHTML = unEntity(fieldProperties.HINT);
+
 //This creates an object of the choices so they can later be displayed in the proper order.
 var choicesObj = {};
 for (let c = 0; c < numChoices; c++) {
@@ -87,9 +90,6 @@ if((orderStartSpaces == null) && (parameters.length > 0) && (parameters[0].value
 else if (orderStartSpaces != null){
     setAnswer(orderStartSpaces);
 }
-
-label.innerHTML = unEntity(fieldProperties.LABEL);
-hint.innerHTML = unEntity(fieldProperties.HINT);
 
 function dispChoices(orderStart) {
     if (orderStart == null) { //If empty (no order set yet), then should show in original order
