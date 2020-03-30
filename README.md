@@ -1,6 +1,5 @@
-# Ranking choices (in-progress)
+# Ranking choices
 
-*This plug-in is in-progress, and may not work correctly.*
 
 ## Description
 
@@ -42,7 +41,7 @@ To create your own field plug-in using this as a template, follow these steps:
 
 ## Parameters
 
-None
+There is one parameter called `allowdef`, which is optional. If the parameter is equal to 0, then the choices as they are initially displayed can be accepted as the answer without making any changes. In other words, the enumerator can swipe to this field, and then swipe to the next field without making changes to the order. For every other value, including if the parameter is not defined at all, then the enumerator must make at least one swap before the answer is accepted, even if it involves tapping the same choice twice so there is no actual change.
 
 ## More resources
 
