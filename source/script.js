@@ -41,6 +41,8 @@ var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
 var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
 var isIOS = (document.body.className.indexOf("ios-collect") >= 0);
 
+var label = document.querySelector('.label');
+var hint = document.querySelector('.hint');
 var formGroup = document.querySelector('.form-group');
 var controlMessage = document.querySelector('.control-message');
 var choices = fieldProperties.CHOICES
@@ -48,6 +50,7 @@ var choicesHolder = document.querySelector('#choices');
 var choiceRows, choiceTds;
 var numChoices = choices.length;
 var orderStartSpaces = getMetaData();
+setAnswer(orderStartSpaces);
 
 var hoverValue = 0;
 var buttonAreas = [];
@@ -67,12 +70,14 @@ if (orderStartSpaces == null) {
     dispChoices()
 }
 else {
-    dispChoices(orderStartSpaces.match(/[^ ]+/g));
+    dispChoices(orderStartSpaces.match(/[^ ]+/g)); //Retrieves order of the choices so far
 }
 
+label.innerHTML = unEntity(fieldProperties.LABEL);
+hint.innerHTML = unEntity(fieldProperties.HINT);
 
 function dispChoices(orderStart) {
-    if (orderStart == null) { //If empty, then should show in original order
+    if (orderStart == null) { //If empty (no order set yet), then should show in original order
         orderStart = [];
         for (let i = 0; i < numChoices; i++) {
             orderStart.push(choices[i].CHOICE_VALUE);
@@ -82,7 +87,7 @@ function dispChoices(orderStart) {
     for (let r = 0; r < numChoices; r++) {
         let choiceValue = orderStart[r];
         let thisChoice = choicesObj[choiceValue];
-        let choiceLabel = thisChoice.label;
+        let choiceLabel = unEntity(thisChoice.label);
         let choiceDiv = '<tr><td class="rank">' + (r + 1) + '</td><td draggable="true" class="choice';
 
         if (isWebCollect) { choiceDiv += ' webcollect'; }
@@ -91,7 +96,7 @@ function dispChoices(orderStart) {
             + '<div class="choiceDiv" id=' + choiceValue + '>' + choiceLabel + '</div></td></tr>\n';
         choicesHolder.innerHTML += choiceDiv;
     } //End FOR to display choices in the correct order
-    choiceRows = document.querySelector('#choices').querySelectorAll('tr');
+    choiceRows = document.querySelector('#choices').querySelectorAll('tr'); //Gathered for later adjusting box height
     choiceTds = document.querySelectorAll('.choice');
     boxHeightAdjuster();
     getChoicePos();
@@ -111,6 +116,10 @@ function handleConstraintMessage(message) {
 function handleRequiredMessage(message) {
     handleConstraintMessage(message)
 }
+
+function unEntity(str){
+    return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  }
 
 //Changes each box's height to be as tall as the tallest one so that no box is dominant
 function boxHeightAdjuster() {

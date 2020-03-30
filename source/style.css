@@ -4,7 +4,7 @@ body{
     font-weight: 300;
 }
 
-.label-container { /*Label*/
+.label { /*Label*/
     width: 100%;
     margin-bottom: 15px;
     font-weight: 400;
@@ -13,7 +13,7 @@ body{
     max-width: 100%;
 }
 
-.help-block {/*Hint*/
+.hint {/*Hint*/
     margin-top: 5px;
     font-size: 12px;
     display: block;
