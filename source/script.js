@@ -39,12 +39,6 @@ class Choice {
 document.body.classList.add('web-collect');
 //Above for testing only*/
 
-var testingDiv = document.querySelector('#testing');
-function testing(text) {
-    //testingDiv.innerHTML += text + '<br>\n';
-    console.log(text);
-}
-
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
 var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
 var isIOS = (document.body.className.indexOf("ios-collect") >= 0);
@@ -164,7 +158,6 @@ function clicked(e) { //For click-select or tap-select to swap
     }
 
     if (selectedTd == null) {
-        testing("Selected!");
         selectedTd = target;
         selectedTd.classList.add('dragged');
     }
@@ -173,7 +166,6 @@ function clicked(e) { //For click-select or tap-select to swap
         window.setTimeout(
             function () {
                 try { //Swap if clicked or tapped instead of dragged
-                    testing("Mark 1");
                     let hold = selectedTd.innerHTML;
                     selectedTd.innerHTML = target.innerHTML;
                     target.innerHTML = hold;
@@ -218,7 +210,6 @@ function dragOver(e) {
 
 function dragLeave(e) {
     this.classList.remove('over');
-    testing("Mark 2");
 }
 
 function moveDrop(e) {
@@ -241,7 +232,6 @@ function dragEnd(e) {
         choice.classList.remove('over'); //Removes all moving styling when done moving. Applies to all, since otherwise the place it was moved to will not be turned back.
     });
 
-    testing("Mark 3");
     gatherAnswer();
 }
 
@@ -252,14 +242,13 @@ var yStart;*/ //xStart and yStart is used when dragging on touchscreen shows the
 var xPos; //x position of mouse/finger
 var yPos; //y position of mouse/finger
 var moving = false;
-var touchedAnother = false;
+var touchedAnother = false; //Ensures that when a choice is tapped and the finger moves slightly, but not to another choice, that choice remains seleced
 
 function removeSelectedFormatting() { //Removes formatting when a swap is done
     for (let i = 0; i < numChoices; i++) {
         choiceTds[i].classList.remove('dragged');
         choiceTds[i].classList.remove('over');
     }
-    testing("Mark 4");
 }
 
 function touchMove(e) {
@@ -307,7 +296,6 @@ function touchMove(e) {
         }
         else if (touchedAnother) { //Removed dragover coloring when exited
             locChoice.classList.remove('over');
-            testing("Mark 5");
         }
     }
 }
@@ -336,12 +324,10 @@ function touchEnd(e) {
     }
 
     if (selectedTd == null) { //This way, if a TD is selected, it does not gather the answer and remove the formatting yet
-        testing("Mark 8");
         gatherAnswer();
     }
 
     if ((selectedTd == null)) {
-        testing("Mark 6")
         removeSelectedFormatting();
     }
 
