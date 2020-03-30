@@ -14,7 +14,13 @@ fieldProperties = {
     ],
     "METADATA": null,
     "LABEL": 'Hi!',
-    "HINT": 'Lo!'
+    "HINT": 'Lo!',
+    PARAMETERS: [
+        {
+            "key": 'allowdef',
+            "value": '1'
+        }
+    ]
 }
 
 function setAnswer(ans) {
@@ -52,7 +58,7 @@ var choicesHolder = document.querySelector('#choices');
 var choiceRows, choiceTds;
 var numChoices = choices.length;
 var orderStartSpaces = getMetaData();
-setAnswer(orderStartSpaces);
+var parameters = fieldProperties.PARAMETERS;
 
 var hoverValue = 0;
 var buttonAreas = [];
@@ -73,6 +79,13 @@ if (orderStartSpaces == null) {
 }
 else {
     dispChoices(orderStartSpaces.match(/[^ ]+/g)); //Retrieves order of the choices so far
+}
+
+if((orderStartSpaces == null) && (parameters.length > 0) && (parameters[0].value == 0)){ //If it is okay to leave the default display of choices without any tapping or dragging of the choices
+    gatherAnswer();
+}
+else if (orderStartSpaces != null){
+    setAnswer(orderStartSpaces);
 }
 
 label.innerHTML = unEntity(fieldProperties.LABEL);
