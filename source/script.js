@@ -12,7 +12,9 @@ fieldProperties = {
         new fPChoice(1, 1, 'Choice 2'),
         new fPChoice(2, 2, 'Choice 3'),
     ],
-    "METADATA": null
+    "METADATA": null,
+    "LABEL": 'Hi!',
+    "HINT": 'Lo!'
 }
 
 function setAnswer(ans) {
@@ -36,6 +38,12 @@ class Choice {
 
 document.body.classList.add('web-collect');
 //Above for testing only*/
+
+var testingDiv = document.querySelector('#testing');
+function testing(text) {
+    //testingDiv.innerHTML += text + '<br>\n';
+    console.log(text);
+}
 
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
 var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
@@ -117,9 +125,14 @@ function handleRequiredMessage(message) {
     handleConstraintMessage(message)
 }
 
-function unEntity(str){
-    return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  }
+function unEntity(str) {
+    if (str == null) {
+        return null;
+    }
+    else {
+        return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+}
 
 //Changes each box's height to be as tall as the tallest one so that no box is dominant
 function boxHeightAdjuster() {
@@ -151,6 +164,7 @@ function clicked(e) { //For click-select or tap-select to swap
     }
 
     if (selectedTd == null) {
+        testing("Selected!");
         selectedTd = target;
         selectedTd.classList.add('dragged');
     }
@@ -159,6 +173,7 @@ function clicked(e) { //For click-select or tap-select to swap
         window.setTimeout(
             function () {
                 try { //Swap if clicked or tapped instead of dragged
+                    testing("Mark 1");
                     let hold = selectedTd.innerHTML;
                     selectedTd.innerHTML = target.innerHTML;
                     target.innerHTML = hold;
@@ -203,6 +218,7 @@ function dragOver(e) {
 
 function dragLeave(e) {
     this.classList.remove('over');
+    testing("Mark 2");
 }
 
 function moveDrop(e) {
@@ -224,6 +240,8 @@ function dragEnd(e) {
     [].forEach.call(choiceTds, function (choice) {
         choice.classList.remove('over'); //Removes all moving styling when done moving. Applies to all, since otherwise the place it was moved to will not be turned back.
     });
+
+    testing("Mark 3");
     gatherAnswer();
 }
 
@@ -233,18 +251,23 @@ function dragEnd(e) {
 var yStart;*/ //xStart and yStart is used when dragging on touchscreen shows the choice being dragged with the finger, but this does not work in SurveyCTO Collect right now, so not being used.
 var xPos; //x position of mouse/finger
 var yPos; //y position of mouse/finger
-var moving = false
+var moving = false;
+var touchedAnother = false;
 
 function removeSelectedFormatting() { //Removes formatting when a swap is done
     for (let i = 0; i < numChoices; i++) {
         choiceTds[i].classList.remove('dragged');
         choiceTds[i].classList.remove('over');
     }
+    testing("Mark 4");
 }
 
 function touchMove(e) {
     //console.log("Touch move")
-    selectedTd = null;
+    if(touchedAnother){
+        selectedTd = null;
+    }
+
     var touchedChoice;
     if (e.target.tagName == 'DIV') {
         touchedChoice = e.path[1];
@@ -279,15 +302,18 @@ function touchMove(e) {
         let locChoice = choiceTds[i];
         if ((touching == i) && (!locChoice.classList.contains('dragged'))) { //Turns to color of dragover if being dragged over
             locChoice.classList.add('over');
+            touchedAnother = true;
             locChoice.style.zIndex = 0;
         }
-        else { //Removed dragover coloring when exited
+        else if (touchedAnother) { //Removed dragover coloring when exited
             locChoice.classList.remove('over');
+            testing("Mark 5");
         }
     }
 }
 function touchEnd(e) {
     //console.log("Touch end")
+    touchedAnother = false;
     var touchedChoice;
 
     if (e.target.tagName == 'DIV') {
@@ -309,11 +335,13 @@ function touchEnd(e) {
         choiceTds[touching].innerHTML = draggedHTML;
     }
 
-    if(selectedTd == null){ //This way, if a TD is selected, it does not gather the answer and remove the formatting yet
+    if (selectedTd == null) { //This way, if a TD is selected, it does not gather the answer and remove the formatting yet
+        testing("Mark 8");
         gatherAnswer();
     }
 
-    if (selectedTd == null) {
+    if ((selectedTd == null)) {
+        testing("Mark 6")
         removeSelectedFormatting();
     }
 
@@ -337,8 +365,13 @@ function touchingOther() {
     return -1;
 }
 
-/*function touchCancel(e) {
-}*/
+function touchCancel(e) {
+
+    moving = false;
+    dragSrcEl = null
+    selectedTd = null;
+    removeSelectedFormatting();
+}
 
 
 function gatherAnswer() {
@@ -353,6 +386,7 @@ function gatherAnswer() {
     setAnswer(joinedAnswer);
     setMetaData(joinedAnswer); //Stored in metadata so if the enumerator comes back, it is in the order they left it in
     selectedTd = null; //Undoes having a selected TD in case one was clicked before deciding to drag instead
+    console.log("Mark 7")
     removeSelectedFormatting();
 }
 
@@ -384,5 +418,5 @@ for (let c = 0; c < numChoices; c++) { //Assigns the touch events
     choice.addEventListener('touchstart', clicked, false);
     choice.addEventListener('touchmove', touchMove, false);
     choice.addEventListener('touchend', touchEnd, false);
-    //choice.addEventListener('touchcancel', touchCancel, false);
+    choice.addEventListener('touchcancel', touchCancel, false);
 }
