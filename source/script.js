@@ -1,4 +1,4 @@
-class fPChoice {
+/*class fPChoice {
     constructor(index, value, label) {
         this.CHOICE_INDEX = index;
         this.CHOICE_VALUE = value;
@@ -9,7 +9,7 @@ class fPChoice {
 fieldProperties = {
     "CHOICES": [
         new fPChoice(0, 0, 'Choice 1'),
-        new fPChoice(1, 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempornsequat. xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempornsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+        new fPChoice(1, 1, 'Choice 2'),
         new fPChoice(2, 2, 'Choice 3'),
     ],
     "METADATA": null
@@ -127,13 +127,9 @@ function boxHeightAdjuster() {
 
 
 
-
-////////////////////
-//Dragging and dropping
-//Thanks to https://www.html5rocks.com/en/tutorials/dnd/basics/
 var selectedTd = null;
 
-function clicked(e) { //For click-select to swap
+function clicked(e) { //For click-select or tap-select to swap
     var target;
     if (e.target.tagName == 'DIV') { //Chain of IFs ensures the TD is selected, and not anything above or below
         target = e.path[1];
@@ -153,7 +149,7 @@ function clicked(e) { //For click-select to swap
         target.classList.add('over');
         window.setTimeout(
             function () {
-                try {
+                try { //Swap if clicked or tapped instead of dragged
                     let hold = selectedTd.innerHTML;
                     selectedTd.innerHTML = target.innerHTML;
                     target.innerHTML = hold;
@@ -173,6 +169,9 @@ function clicked(e) { //For click-select to swap
     event.preventDefault();
 }
 
+////////////////////
+//Dragging and dropping
+//Thanks to https://www.html5rocks.com/en/tutorials/dnd/basics/
 
 var dragSrcEl = null
 function dragStart(e) {
@@ -223,11 +222,11 @@ function dragEnd(e) {
 /////Touchscreen
 /*var xStart;
 var yStart;*/ //xStart and yStart is used when dragging on touchscreen shows the choice being dragged with the finger, but this does not work in SurveyCTO Collect right now, so not being used.
-var xPos;
-var yPos;
+var xPos; //x position of mouse/finger
+var yPos; //y position of mouse/finger
 var moving = false
 
-function removeSelectedFormatting() {
+function removeSelectedFormatting() { //Removes formatting when a swap is done
     for (let i = 0; i < numChoices; i++) {
         choiceTds[i].classList.remove('dragged');
         choiceTds[i].classList.remove('over');
@@ -260,7 +259,7 @@ function touchMove(e) {
 
     touchedChoice.classList.add('dragged');
 
-    touchedChoice.zIndex = 15;
+    //touchedChoice.zIndex = 15; //Not working as intended right now, but may address later
     var objWidth = touchedChoice.offsetWidth;
     var objHeight = touchedChoice.offsetHeight;
     touchedChoice.style.left = xPos - (objWidth / 2);
@@ -269,11 +268,11 @@ function touchMove(e) {
     var touching = touchingOther();
     for (let i = 0; i < numChoices; i++) {
         let locChoice = choiceTds[i];
-        if ((touching == i) && (!locChoice.classList.contains('dragged'))) {
+        if ((touching == i) && (!locChoice.classList.contains('dragged'))) { //Turns to color of dragover if being dragged over
             locChoice.classList.add('over');
             locChoice.style.zIndex = 0;
         }
-        else {
+        else { //Removed dragover coloring when exited
             locChoice.classList.remove('over');
         }
     }
@@ -333,7 +332,6 @@ function touchingOther() {
 }*/
 
 
-
 function gatherAnswer() {
     let answer = [];
     //Puts the current list into an array in its current order.
@@ -344,12 +342,12 @@ function gatherAnswer() {
     let joinedAnswer = answer.join(' ');
 
     setAnswer(joinedAnswer);
-    setMetaData(joinedAnswer);
+    setMetaData(joinedAnswer); //Stored in metadata so if the enumerator comes back, it is in the order they left it in
     selectedTd = null; //Undoes having a selected TD in case one was clicked before deciding to drag instead
     removeSelectedFormatting();
 }
 
-function getChoicePos() {
+function getChoicePos() { //Gathers dimensions of each choice so it can be detected if they are being dragged over
     for (let i = 0; i < numChoices; i++) {
         let tdRect = choiceTds[i].getBoundingClientRect();
         let tdDim = [];
@@ -361,7 +359,7 @@ function getChoicePos() {
     }
 }
 
-for (let c = 0; c < numChoices; c++) {
+for (let c = 0; c < numChoices; c++) { //Assigns the touch events
     let choice = choiceTds[c];
 
     if (isWebCollect) {
