@@ -372,7 +372,6 @@ function gatherAnswer() {
     setAnswer(joinedAnswer);
     setMetaData(joinedAnswer); //Stored in metadata so if the enumerator comes back, it is in the order they left it in
     selectedTd = null; //Undoes having a selected TD in case one was clicked before deciding to drag instead
-    console.log("Mark 7")
     removeSelectedFormatting();
 }
 
