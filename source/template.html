@@ -1,6 +1,28 @@
 <!--link rel="stylesheet" type="text/css" href="style.css">
 <script src="script.js" defer></script-->
 <label class="label default-question-text-size" for="inputField">{{{LABEL}}}</label>
+
+<!-- If there is an image specified in the media:image column, show it here -->
+{{#MEDIAIMAGE}}
+<img src="{{MEDIAIMAGE}}" />
+{{/MEDIAIMAGE}}
+
+<!-- If there is audio specified in the media:audio column, show it here -->
+{{#MEDIAAUDIO}}
+<audio controls>
+    <source src="{{MEDIAAUDIO}}">
+    Your browser does not support the audio element.
+</audio>
+{{/MEDIAAUDIO}}
+
+<!-- If there is a video specified in the media:video column, show it here -->
+{{#MEDIAVIDEO}}
+<video width="100%" height="*" controls>
+    <source src="{{MEDIAVIDEO}}">
+    Your browser does not support the video tag.
+</video>
+{{/MEDIAVIDEO}}
+
 <span class="hint">{{{HINT}}}</span>
 <div class="form-group" style="margin-bottom: 0px;">
     <em class="control-message"></em>
