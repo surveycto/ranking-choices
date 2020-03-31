@@ -42,8 +42,12 @@ class Choice {
     }
 }
 
-document.body.classList.add('web-collect');
+document.body.classList.add('android-collect');
 //Above for testing only*/
+var testDiv = document.querySelector('#testing');
+function testing(text){
+    testDiv.innerHTML += text + "<br>\n";
+}
 
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
 var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
@@ -110,6 +114,7 @@ function dispChoices(orderStart) {
         choiceTdLoc += '">\n'
             + '<div class="choiceDiv" id=' + choiceValue + '>' + choiceLabel + '</div></td></tr>\n';
         choicesHolder.innerHTML += choiceTdLoc;
+
     } //End FOR to display choices in the correct order
     choiceRows = document.querySelector('#choices').querySelectorAll('tr'); //Gathered for later adjusting box height
     choiceTds = document.querySelectorAll('.choice');
@@ -150,8 +155,14 @@ function boxHeightAdjuster() {
     let topHeight = Math.max(...allHeights);
 
     for (let i = 0; i < numChoices; i++) {
-        choiceRows[i].style.height = topHeight;
+        let thisChoice = choiceRows[i];
+        let bounding = thisChoice.getBoundingClientRect();
+
+        thisChoice.style.height = topHeight;
+        thisChoice.style.left = bounding.left;
+        thisChoice.style.top = bounding.top;
     }
+
 }
 
 
@@ -250,8 +261,8 @@ function dragEnd(e) {
 
 
 /////Touchscreen
-/*var xStart;
-var yStart;*/ //xStart and yStart is used when dragging on touchscreen shows the choice being dragged with the finger, but this does not work in SurveyCTO Collect right now, so not being used.
+var xStart;
+var yStart; //xStart and yStart is used when dragging on touchscreen shows the choice being dragged with the finger, but this does not work in SurveyCTO Collect right now, so not being used.
 var xPos; //x position of mouse/finger
 var yPos; //y position of mouse/finger
 var moving = false;
@@ -280,10 +291,10 @@ function touchMove(e) {
     else {
         touchedChoice = e.target;
     }
-    /*if (!moving) {
+    if (!moving) {
         xStart = touchedChoice.style.left;
         yStart = touchedChoice.style.top;
-    }*/
+    }
 
     moving = true;
 
@@ -296,8 +307,11 @@ function touchMove(e) {
     //touchedChoice.zIndex = 15; //Not working as intended right now, but may address later
     var objWidth = touchedChoice.offsetWidth;
     var objHeight = touchedChoice.offsetHeight;
-    touchedChoice.style.left = xPos - (objWidth / 2);
-    touchedChoice.style.top = yPos - (objHeight / 2);
+    testing("Moving to: (" + String(xPos - (objWidth/2)) + "," + String(yPos - (objHeight/2)) + ")");
+    touchedChoice.style.left = xPos - (objWidth/2);
+    touchedChoice.style.top = yPos - (objHeight/2);
+    testing("Moved to: (" + String(touchedChoice.style.left) + "," + String(touchedChoice.style.top) + ")");
+
 
     var touching = touchingOther();
     for (let i = 0; i < numChoices; i++) {
@@ -311,9 +325,12 @@ function touchMove(e) {
             locChoice.classList.remove('over');
         }
     }
+    //console.log(touchedChoice)
+    e.stopPropagation();
 }
+
 function touchEnd(e) {
-    //console.log("Touch end")
+    testing("Touch end");
     touchedAnother = false;
     var touchedChoice;
 
@@ -347,8 +364,10 @@ function touchEnd(e) {
     moving = false;
 
     //Below puts the box back where it was
-    /*touchedChoice.style.left = xStart;
-    touchedChoice.style.top = yStart;*/
+    touchedChoice.style.left = xStart;
+    touchedChoice.style.top = yStart;
+    xStart = null;
+    yStart = null;
 }
 
 //Checks if the dragged choice is over another choice so it can be highlighted and swapped

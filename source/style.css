@@ -65,6 +65,7 @@ td.choice.over{
 
 td.dragged{
     background-color: #047cc2;
+    position: absolute;
 }
 
 .webcollect:hover{
