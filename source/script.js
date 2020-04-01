@@ -157,7 +157,7 @@ function boxHeightAdjuster() {
     for (let i = 0; i < numChoices; i++) {
         let thisChoice = choiceRows[i];
 
-        thisChoice.style.height = topHeight;
+        thisChoice.style.height = String(topHeight) + 'px';
     }
 
 }
