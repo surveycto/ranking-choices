@@ -44,10 +44,10 @@ class Choice {
 
 document.body.classList.add('android-collect');
 //Above for testing only*/
-var testDiv = document.querySelector('#testing');
+/*var testDiv = document.querySelector('#testing');
 function testing(text){
     testDiv.innerHTML += text + "<br>\n";
-}
+}*/
 
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
 var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
@@ -159,8 +159,6 @@ function boxHeightAdjuster() {
         let bounding = thisChoice.getBoundingClientRect();
 
         thisChoice.style.height = topHeight;
-        thisChoice.style.left = bounding.left;
-        thisChoice.style.top = bounding.top;
     }
 
 }
@@ -307,10 +305,8 @@ function touchMove(e) {
     //touchedChoice.zIndex = 15; //Not working as intended right now, but may address later
     var objWidth = touchedChoice.offsetWidth;
     var objHeight = touchedChoice.offsetHeight;
-    testing("Moving to: (" + String(xPos - (objWidth/2)) + "," + String(yPos - (objHeight/2)) + ")");
-    touchedChoice.style.left = xPos - (objWidth/2);
-    touchedChoice.style.top = yPos - (objHeight/2);
-    testing("Moved to: (" + String(touchedChoice.style.left) + "," + String(touchedChoice.style.top) + ")");
+    touchedChoice.style.left = String(xPos - (objWidth/2)) + 'px';
+    touchedChoice.style.top = String(yPos - (objHeight/2)) + 'px';
 
 
     var touching = touchingOther();
@@ -330,7 +326,6 @@ function touchMove(e) {
 }
 
 function touchEnd(e) {
-    testing("Touch end");
     touchedAnother = false;
     var touchedChoice;
 
