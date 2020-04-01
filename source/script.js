@@ -8,7 +8,7 @@
 
 fieldProperties = {
     "CHOICES": [
-        new fPChoice(0, 0, 'Choice 1'),
+        new fPChoice(0, 0, 'Choice 1<br>Row 2'),
         new fPChoice(1, 1, 'Choice 2'),
         new fPChoice(2, 2, 'Choice 3'),
     ],
@@ -156,7 +156,6 @@ function boxHeightAdjuster() {
 
     for (let i = 0; i < numChoices; i++) {
         let thisChoice = choiceRows[i];
-        let bounding = thisChoice.getBoundingClientRect();
 
         thisChoice.style.height = topHeight;
     }
