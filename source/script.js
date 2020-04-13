@@ -165,6 +165,7 @@ Sortable.create(choicesHolder,
 var getOrder = function () {
     //conver order arry to space separated list
     var space_list = order.join(" ");
+    setMetaData(space_list);
     setAnswer(space_list);
 }
 
