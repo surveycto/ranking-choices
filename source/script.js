@@ -1,4 +1,4 @@
-class fPChoice {
+/*class fPChoice {
     constructor(index, value, label) {
         this.CHOICE_INDEX = index;
         this.CHOICE_VALUE = value;
@@ -8,11 +8,11 @@ class fPChoice {
 
 fieldProperties = {
     "CHOICES": [
-        new fPChoice(0, 0, 'Choice 1<br>Row 2'),
+        new fPChoice(0, 0, 'Choice 1'),
         new fPChoice(1, 1, 'Choice 2'),
         new fPChoice(2, 2, 'Choice 3'),
     ],
-    "METADATA": null,
+    "METADATA": '1 2 0',
     "LABEL": 'Hi!',
     "HINT": 'Lo!',
     PARAMETERS: [
@@ -49,51 +49,7 @@ function testing(text){
     testDiv.innerHTML += text + "<br>\n";
 }*/
 
-var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
-var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
-var isIOS = (document.body.className.indexOf("ios-collect") >= 0);
 
-var label = document.querySelector('.label');
-var hint = document.querySelector('.hint');
-var formGroup = document.querySelector('.form-group');
-var controlMessage = document.querySelector('.control-message');
-var choices = fieldProperties.CHOICES;
-var choicesHolder = document.querySelector('#choices');
-var numChoices = choices.length;
-var orderStartSpaces = getMetaData();
-var parameters = fieldProperties.PARAMETERS;
-
-var hoverValue = 0;
-var buttonAreas = [];
-var topHeight;
-
-label.innerHTML = unEntity(fieldProperties.LABEL);
-hint.innerHTML = unEntity(fieldProperties.HINT);
-
-//This creates an object of the choices so they can later be displayed in the proper order.
-var choicesObj = {};
-for (let c = 0; c < numChoices; c++) {
-    let value = choices[c].CHOICE_VALUE;
-    let label = choices[c].CHOICE_LABEL;
-    choicesObj[value] = {
-        "index": c,
-        "label": label
-    };
-}
-
-if (orderStartSpaces == null) {
-    dispChoices()
-}
-else {
-    dispChoices(orderStartSpaces.match(/[^ ]+/g)); //Retrieves order of the choices so far
-}
-
-if((orderStartSpaces == null) && (parameters.length > 0) && (parameters[0].value == 0)){ //If it is okay to leave the default display of choices without any tapping or dragging of the choices
-    gatherAnswer();
-}
-else if (orderStartSpaces != null){
-    setAnswer(orderStartSpaces);
-}
 
 function dispChoices(orderStart) {
     if (orderStart == null) { //If empty (no order set yet), then should show in original order
@@ -107,9 +63,9 @@ function dispChoices(orderStart) {
         let choiceValue = orderStart[r];
         let thisChoice = choicesObj[choiceValue];
         let choiceLabel = unEntity(thisChoice.label);
-        let choiceLi = '<li class="list-item" data-id="' + choiceValue + '">' + choiceLabel + '</li>';
+        let choiceItem = '<li class="list-item" data-id="' + choiceValue + '">' + choiceLabel + '</li>';
 
-        choicesHolder.innerHTML += choiceLi;
+        choicesHolder.innerHTML += choiceItem;
 
     } //End FOR to display choices in the correct order
 }
@@ -138,26 +94,80 @@ function unEntity(str) {
     }
 }
 
-var el = document.getElementById('choices');
+
+
+var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
+var isAndroid = (document.body.className.indexOf("android-collect") >= 0);
+var isIOS = (document.body.className.indexOf("ios-collect") >= 0);
+
+var label = document.querySelector('.label');
+var hint = document.querySelector('.hint');
+var formGroup = document.querySelector('.form-group');
+var controlMessage = document.querySelector('.control-message');
+var choices = fieldProperties.CHOICES;
+var choicesHolder = document.querySelector('#choices');
+var choiceLis;
+var numChoices = choices.length;
+var orderStartSpaces = getMetaData();
+var parameters = fieldProperties.PARAMETERS;
+
+var hoverValue = 0;
+var buttonAreas = [];
+var topHeight;
+
+label.innerHTML = unEntity(fieldProperties.LABEL);
+hint.innerHTML = unEntity(fieldProperties.HINT);
+
+//This creates an object of the choices so they can later be displayed in the proper order.
+var choicesObj = {};
+for (let c = 0; c < numChoices; c++) {
+    let value = choices[c].CHOICE_VALUE;
+    let label = choices[c].CHOICE_LABEL;
+    choicesObj[value] = {
+        "index": c,
+        "label": label
+    };
+}
+
+if (orderStartSpaces == null) {
+    dispChoices()
+}
+else {
+    dispChoices(orderStartSpaces.match(/[^ ]+/g)); //Retrieves order of the choices so far
+}
+choiceLis = choicesHolder.querySelectorAll('li');
+
+if ((orderStartSpaces == null) && (parameters.length > 0) && (parameters[0].value == 0)) { //If it is okay to leave the default display of choices without any tapping or dragging of the choices
+    gatherAnswer();
+}
+else if (orderStartSpaces != null) {
+    setAnswer(orderStartSpaces);
+}
+
 var order;
-Sortable.create(el,
+Sortable.create(choicesHolder,
     {
         group: "choices",
         animation: 150,
-		//ghostClass: 'blue-background-class',
-		
+        ghostClass: 'moving-choice',
+
         store: {
 
-			set: function (sortable) {
-				order = sortable.toArray();
-				getOrder();
-			}
-            
+            set: function (sortable) {
+                order = sortable.toArray();
+                getOrder();
+                choicesHolder.classList.add('hovering');
+            }
+
         }
-	});
-	
-	var getOrder = function (){
-		//conver order arry to space separated list
-		var space_list = order.join(" ");
-		console.log(space_list);
-	}
+    });
+
+var getOrder = function () {
+    //conver order arry to space separated list
+    var space_list = order.join(" ");
+    setAnswer(space_list);
+}
+
+document.addEventListener('mousedown', function(){ //This removes the blue border during moveing. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
+    choicesHolder.classList.remove('hovering');
+});

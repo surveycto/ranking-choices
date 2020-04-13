@@ -1,9 +1,9 @@
 {
 	"name" : "Ranking choices",
 	"author" : "Dobility",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"supportedFieldTypes": ["select_multiple"],
 	"hideDefaultRequiredMessage": true,
 	"hideDefaultConstraintMessage": true,
-	"externalJs": "Sortable.min.js"
+	"externalJs": ["Sortable.min.js"]
 }

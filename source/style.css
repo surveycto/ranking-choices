@@ -29,6 +29,10 @@ body{
     box-shadow: none;
 }
 
+ol{
+    padding: 0px;
+}
+
 .list-item {
     position: relative;
     display: block;
@@ -37,10 +41,14 @@ body{
     background-color: #fff;
     border: 1px solid rgba(0,0,0,.125);
 }
-.list-item:hover {
-    border-style: solid;
-    border-width: thick;
-    border-color: black;
+
+.hovering .list-item:hover {
+    border: solid 2px #047cc2;
+    z-index: 1;
+}
+
+.moving-choice{
+    background-color: #047cc2;
 }
 
 .has-error em.control-message { /*Error area when there is an error*/
