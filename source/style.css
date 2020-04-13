@@ -29,9 +29,13 @@ body{
     box-shadow: none;
 }
 
-ol{
+.choices{
     padding: 0px;
 }
+
+/*.choices .list-item::before{
+    content: "1. ";
+}*/
 
 .list-item {
     position: relative;

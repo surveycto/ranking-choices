@@ -63,7 +63,7 @@ function dispChoices(orderStart) {
         let choiceValue = orderStart[r];
         let thisChoice = choicesObj[choiceValue];
         let choiceLabel = unEntity(thisChoice.label);
-        let choiceItem = '<li class="list-item" data-id="' + choiceValue + '">' + choiceLabel + '</li>';
+        let choiceItem = '<li class="list-item" data-id="' + choiceValue + '"><span id="rank"></span>. ' + choiceLabel + '</li>';
 
         choicesHolder.innerHTML += choiceItem;
 
@@ -94,6 +94,12 @@ function unEntity(str) {
     }
 }
 
+function setRanks() {
+    rankSpans = choicesHolder.querySelectorAll('#rank');
+    for (let r = 0; r < numChoices; r++) {
+        rankSpans[r].innerHTML = (r + 1);
+    }
+}
 
 
 var isWebCollect = (document.body.className.indexOf("web-collect") >= 0);
@@ -106,7 +112,7 @@ var formGroup = document.querySelector('.form-group');
 var controlMessage = document.querySelector('.control-message');
 var choices = fieldProperties.CHOICES;
 var choicesHolder = document.querySelector('#choices');
-var choiceLis;
+var choiceLis, rankSpans;
 var numChoices = choices.length;
 var orderStartSpaces = getMetaData();
 var parameters = fieldProperties.PARAMETERS;
@@ -136,6 +142,8 @@ else {
     dispChoices(orderStartSpaces.match(/[^ ]+/g)); //Retrieves order of the choices so far
 }
 choiceLis = choicesHolder.querySelectorAll('li');
+rankSpans = choicesHolder.querySelectorAll('#rank');
+setRanks();
 
 if ((orderStartSpaces == null) && (parameters.length > 0) && (parameters[0].value == 0)) { //If it is okay to leave the default display of choices without any tapping or dragging of the choices
     gatherAnswer();
@@ -167,8 +175,9 @@ var getOrder = function () {
     var space_list = order.join(" ");
     setMetaData(space_list);
     setAnswer(space_list);
+    setRanks();
 }
 
-document.addEventListener('mousedown', function(){ //This removes the blue border during moveing. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
+document.addEventListener('mousedown', function () { //This removes the blue border during moveing. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
     choicesHolder.classList.remove('hovering');
 });
