@@ -23,76 +23,25 @@ body{
     font-weight: 300;
 }
 
-.form-control { /*Input box*/
-    border-radius: 0!important;
-    box-shadow: none;
-    display: block;
-    width: 95%;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    resize: horizontal;
-    height: 20px;
-    outline: none;
-    font-family: inherit;
-    font: inherit;
-    margin: 0;
-}
 
 .form-control:focus { /*Input box when focused*/
     border-color: #047cc2!important;
     box-shadow: none;
 }
 
-
-.choice{
-    /* position: absolute; */
-    cursor: move;
-    color: black;
-    padding: 10px;
-    z-index: 0;
-    width: 500px;
+.list-item {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
 }
-
-td.choice.over{
-    background-color: #639c33;
+.list-item:hover {
+    border-style: solid;
+    border-width: thick;
+    border-color: black;
 }
-
-td.dragged{
-    background-color: #047cc2;
-    position: absolute;
-}
-
-.webcollect:hover{
-    background-color: #047cc2;
-}
-
-.rank{
-    position: static;
-}
-
-.choicetable td{
-    border: 1px solid black;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-/*.choicetable tr{
-    padding-bottom: 5px;
-}*/
-
-/*.spanChoice{
-    border: 1px solid black;
-    position: relative; 
-}*/
-
-
 
 .has-error em.control-message { /*Error area when there is an error*/
     background: #f56954;
