@@ -71,6 +71,7 @@ function dispChoices(orderStart) {
         for (let i = 0; i < numChoices; i++) {
             orderStart.push(choices[i].CHOICE_VALUE);
         }
+        orderStartSpaces = orderStart.join(' ');
     }
     //Used to display the choices in the correct order
     for (let r = 0; r < numChoices; r++) {
