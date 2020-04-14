@@ -1,10 +1,16 @@
 # Ranking choices
 
+![](extras/preview-images/main.jpg)
+
+|<img src="extras/preview-images/moving.jpg" width="100px">|<img src="extras/preview-images/ranked.jpg" width="100px">|<img src="extras/preview-images/no-numbers.jpg" width="100px">|
+|:---:|:---:|:---:|:---:|
+|Moving|Ranked|No numbers|
 
 ## Description
 
 Use this field plug-in so enumerators can drag to rank choices. Define your choices like you usually would, attach this field plug-in, and you're all set!
 
+[![Download now](extras/other-images/download-button.png)](https://github.com/surveycto/extra-buttons/raw/master/rankingchoices.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
 
