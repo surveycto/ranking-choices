@@ -3,9 +3,8 @@
 
 ## Description
 
-Use this field plug-in so you can rank choices by clicking, tapping, or dragging. Define your choices like you usually would, attach this field plug-in, and you're all set!
+Use this field plug-in so enumerators can drag to rank choices. Define your choices like you usually would, attach this field plug-in, and you're all set!
 
-Enumerators can rank choices with their preferred method. They can tap/click a choice, and then click/tap another choice to swap it with. They can also click/tap and hold, then drag over to the choice they would like to swap it with.
 
 ## Default SurveyCTO feature support
 
@@ -41,7 +40,16 @@ To create your own field plug-in using this as a template, follow these steps:
 
 ## Parameters
 
-There is one parameter called `allowdef`, which is optional. If the parameter is equal to 0, then the choices as they are initially displayed can be accepted as the answer without making any changes. In other words, the enumerator can swipe to this field, and then swipe to the next field without making changes to the order. For every other value, including if the parameter is not defined at all, then the enumerator must make at least one swap before the answer is accepted, even if it involves tapping the same choice twice so there is no actual change.
+|Name|Description|Default|
+|---|---|---|
+|`allowdef`|Whether to allow the default display without making changes|0|
+|`numbers`|Whether to number the rankings of each choice|1|
+
+
+There are two parameters:
+
+1. `alloqdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. Otherwise, at least one change needs to occur. This change can be as simple as tapping a choice so it stays in the same place.
+1. `numbers`:  If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.
 
 ## More resources
 
