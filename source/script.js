@@ -15,10 +15,14 @@ fieldProperties = {
     "METADATA": '1 2 0',
     "LABEL": 'Hi!',
     "HINT": 'Lo!',
-    PARAMETERS: [
+    "PARAMETERS": [
         {
             "key": 'allowdef',
             "value": '1'
+        },
+        {
+            "key": 'numbers',
+            "value": '0'
         }
     ]
 }
@@ -33,6 +37,16 @@ function setMetaData(string) {
 
 function getMetaData() {
     return fieldProperties.METADATA;
+}
+
+function getPluginParameter(param){
+    for(let p of fieldProperties.PARAMETERS){
+        let key = p.key
+        if(key == param){
+            return p.value;
+        }
+    }
+    return;
 }
 
 class Choice {
@@ -63,8 +77,14 @@ function dispChoices(orderStart) {
         let choiceValue = orderStart[r];
         let thisChoice = choicesObj[choiceValue];
         let choiceLabel = unEntity(thisChoice.label);
-        let choiceItem = '<li class="list-item" data-id="' + choiceValue + '"><span id="rank"></span>. ' + choiceLabel + '</li>';
+        let choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
 
+
+        if (useNumbers == 1) {
+            choiceItem += '<span id="rank"></span>. ';
+        }
+
+        choiceItem += choiceLabel + '</li>';
         choicesHolder.innerHTML += choiceItem;
 
     } //End FOR to display choices in the correct order
@@ -95,9 +115,11 @@ function unEntity(str) {
 }
 
 function setRanks() {
-    rankSpans = choicesHolder.querySelectorAll('#rank');
-    for (let r = 0; r < numChoices; r++) {
-        rankSpans[r].innerHTML = (r + 1);
+    if (useNumbers == 1) {
+        rankSpans = choicesHolder.querySelectorAll('#rank');
+        for (let r = 0; r < numChoices; r++) {
+            rankSpans[r].innerHTML = (r + 1);
+        }
     }
 }
 
@@ -115,11 +137,10 @@ var choicesHolder = document.querySelector('#choices');
 var choiceLis, rankSpans;
 var numChoices = choices.length;
 var orderStartSpaces = getMetaData();
-var parameters = fieldProperties.PARAMETERS;
-
-var hoverValue = 0;
-var buttonAreas = [];
-var topHeight;
+var useNumbers = getPluginParameter('numbers');
+if(useNumbers == null){
+    useNumbers = 1;
+}
 
 label.innerHTML = unEntity(fieldProperties.LABEL);
 hint.innerHTML = unEntity(fieldProperties.HINT);
@@ -145,7 +166,7 @@ choiceLis = choicesHolder.querySelectorAll('li');
 rankSpans = choicesHolder.querySelectorAll('#rank');
 setRanks();
 
-if ((orderStartSpaces == null) && (parameters.length > 0) && (parameters[0].value == 0)) { //If it is okay to leave the default display of choices without any tapping or dragging of the choices
+if ((orderStartSpaces == null) && (getPluginParameter('allowdef') != 1)) { //If it is okay to leave the default display of choices without any tapping or dragging of the choices
     gatherAnswer();
 }
 else if (orderStartSpaces != null) {
