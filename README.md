@@ -10,6 +10,8 @@
 
 Use this field plug-in so enumerators can drag to rank choices. Define your choices like you usually would, attach this field plug-in, and you're all set!
 
+This field will return a space-separated list of all choices in the order they were ranked. You can use the [selected-at()](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_selected-at) function to retrieve each rank. For example, if the field is called "ranking", you can use the expression `selected-at(${ranking}, 0)` to retrieve the value of the choice ranked number 1, `selected-at(${ranking}, 1)` to retrieve the value of the choice ranked number 2, and so on.
+
 [![Download now](extras/other-images/download-button.png)](https://github.com/surveycto/extra-buttons/raw/master/rankingchoices.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
