@@ -166,10 +166,7 @@ choiceLis = choicesHolder.querySelectorAll('li');
 rankSpans = choicesHolder.querySelectorAll('#rank');
 setRanks();
 
-if ((orderStartSpaces == null) && (getPluginParameter('allowdef') != 1)) { //If it is okay to leave the default display of choices without any tapping or dragging of the choices
-    gatherAnswer();
-}
-else if (orderStartSpaces != null) {
+if(getPluginParameter('allowdef') == 1){
     setAnswer(orderStartSpaces);
 }
 
