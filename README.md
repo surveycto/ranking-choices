@@ -3,7 +3,7 @@
 ![](extras/preview-images/main.jpg)
 
 |<img src="extras/preview-images/moving.jpg" width="100px">|<img src="extras/preview-images/ranked.jpg" width="100px">|<img src="extras/preview-images/no-numbers.jpg" width="100px">|
-|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|
 |Moving|Ranked|No numbers|
 
 ## Description
