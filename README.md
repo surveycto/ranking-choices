@@ -57,7 +57,7 @@ There are two parameters:
 ## More resources
 
 * **Sample form**  
-You can find a form definition in this repo here: [extras/test-form](extras/test-form).
+You can find a form definition in this repo here: [extras/sample-form](extras/sample-form).
 
 * **Developer documentation**  
 More instructions for developing and using field plug-ins can be found here: [https://github.com/surveycto/Field-plug-in-resources](https://github.com/surveycto/Field-plug-in-resources)
