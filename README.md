@@ -12,6 +12,8 @@ Use this field plug-in so enumerators can drag to rank choices. Define your choi
 
 This field will return a space-separated list of all choices in the order they were ranked. You can use the [selected-at()](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_selected-at) function to retrieve each rank. For example, if the field is called "ranking", you can use the expression `selected-at(${ranking}, 0)` to retrieve the value of the choice ranked number 1, `selected-at(${ranking}, 1)` to retrieve the value of the choice ranked number 2, and so on.
 
+This field plug-in also inherits functionality from the [baseline-select_multiple](https://github.com/surveycto/baseline-select_multiple) field plug-in.
+
 [![Download now](extras/other-images/download-button.png)](https://github.com/surveycto/ranking-choices/raw/master/rankingchoices.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
@@ -33,18 +35,11 @@ This field will return a space-separated list of all choices in the order they w
 
 ## How to use
 
-**To use this plug-in as-is**, just download the [rankingchoices.fieldplugin.zip](rankingchoices.fieldplugin.zip) file from this repo, and attach it to your form.
+**To use this field plug-in as-is:**
 
-To create your own field plug-in using this as a template, follow these steps:
-
-1. Fork this repo
-1. Make changes to the files in the `source` directory.
-
-    * **Note:** be sure to update the `manifest.json` file as well.
-
-1. Zip the updated contents of the `source` directory.
-1. Rename the .zip file to *yourpluginname*.fieldplugin.zip (replace *yourpluginname* with the name you want to use for your plug-in).
-1. You may then attach your new .fieldplugin.zip file to your form as normal.
+1. Download the [sample form](extras/sample-form) from this repo and upload it to your SurveyCTO server.
+1. Download the [rankingchoices.fieldplugin.zip](https://github.com/surveycto/ranking-choices/raw/master/rankingchoices.fieldplugin.zip) file from this repo, and attach it to the sample form on your SurveyCTO server.
+1. Adjust the parameter if you would like to use a different unit (see below).
 
 ## Parameters
 
@@ -56,12 +51,12 @@ To create your own field plug-in using this as a template, follow these steps:
 
 There are two parameters:
 
-1. `alloqdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. Otherwise, at least one change needs to occur. This change can be as simple as tapping a choice so it stays in the same place.
+1. `alloqdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. If the parameter is any other value, or it is not included, at least one change needs to occur. This change can be as simple as tapping a choice so it stays in the same place.
 1. `numbers`:  If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.
 
 ## More resources
 
-* **Test form**  
+* **Sample form**  
 You can find a form definition in this repo here: [extras/test-form](extras/test-form).
 
 * **Developer documentation**  
