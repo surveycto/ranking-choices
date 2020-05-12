@@ -82,7 +82,7 @@ function dispChoices(orderStart) {
 
 
         if (useNumbers == 1) {
-            choiceItem += '<span id="rank"></span>. ';
+            choiceItem += '<span id="rank" dir="auto"></span>. ';
         }
 
         choiceItem += choiceLabel + '</li>';
