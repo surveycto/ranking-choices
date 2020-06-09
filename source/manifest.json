@@ -1,7 +1,7 @@
 {
 	"name" : "Ranking choices",
 	"author" : "Dobility",
-	"version": "2.0.4",
+	"version": "2.0.5",
 	"supportedFieldTypes": ["select_multiple"],
 	"hideDefaultRequiredMessage": true,
 	"hideDefaultConstraintMessage": true,
