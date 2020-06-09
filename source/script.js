@@ -1,17 +1,17 @@
 function dispChoices (orderStart) {
   if (orderStart == null) { // If empty (no order set yet), then should show in original order
     orderStart = []
-    for (let i = 0; i < numChoices; i++) {
+    for (var i = 0; i < numChoices; i++) {
       orderStart.push(choices[i].CHOICE_VALUE)
     }
     orderStartSpaces = orderStart.join(' ')
   }
   // Used to display the choices in the correct order
-  for (let r = 0; r < numChoices; r++) {
-    const choiceValue = orderStart[r]
-    const thisChoice = choicesObj[choiceValue]
-    const choiceLabel = unEntity(thisChoice.label)
-    let choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
+  for (var r = 0; r < numChoices; r++) {
+    var choiceValue = orderStart[r]
+    var thisChoice = choicesObj[choiceValue]
+    var choiceLabel = unEntity(thisChoice.label)
+    var choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
 
     if (useNumbers === 1) {
       choiceItem += '<span id="rank"></span>. '
@@ -48,7 +48,7 @@ function unEntity (str) {
 function setRanks () {
   if (useNumbers === 1) {
     rankSpans = choicesHolder.querySelectorAll('#rank')
-    for (let r = 0; r < numChoices; r++) {
+    for (var r = 0; r < numChoices; r++) {
       rankSpans[r].innerHTML = (r + 1)
     }
   }
@@ -73,8 +73,8 @@ hint.innerHTML = unEntity(fieldProperties.HINT)
 
 // This creates an object of the choices so they can later be displayed in the proper order.
 var choicesObj = {}
-for (let c = 0; c < numChoices; c++) {
-  const value = choices[c].CHOICE_VALUE
+for (var c = 0; c < numChoices; c++) {
+  var value = choices[c].CHOICE_VALUE
   const label = choices[c].CHOICE_LABEL
   choicesObj[value] = {
     index: c,
