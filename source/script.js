@@ -19,7 +19,7 @@ hint.innerHTML = unEntity(fieldProperties.HINT)
 
 // This creates an object of the choices so they can later be displayed in the proper order.
 var choicesObj = {}
-for (let c = 0; c < numChoices; c++) {
+for (var c = 0; c < numChoices; c++) {
   const value = choices[c].CHOICE_VALUE
   const label = choices[c].CHOICE_LABEL
   choicesObj[value] = {
@@ -36,7 +36,7 @@ if (orderStartSpaces == null) {
 rankSpans = choicesHolder.querySelectorAll('#rank')
 setRanks()
 
-if (getPluginParameter('allowdef') == 1) {
+if (getPluginParameter('allowdef') === 1) {
   setAnswer(orderStartSpaces)
 }
 
@@ -66,26 +66,26 @@ var getOrder = function () {
   setRanks()
 }
 
-document.addEventListener('mousedown', function () { // This removes the blue border during moveing. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
+document.addEventListener('mousedown', function () { // This removes the blue border during moving. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
   choicesHolder.classList.remove('hovering')
 })
 
 function dispChoices (orderStart) {
   if (orderStart == null) { // If empty (no order set yet), then should show in original order
     orderStart = []
-    for (let i = 0; i < numChoices; i++) {
+    for (var i = 0; i < numChoices; i++) {
       orderStart.push(choices[i].CHOICE_VALUE)
     }
     orderStartSpaces = orderStart.join(' ')
   }
   // Used to display the choices in the correct order
-  for (let r = 0; r < numChoices; r++) {
+  for (var r = 0; r < numChoices; r++) {
     const choiceValue = orderStart[r]
     const thisChoice = choicesObj[choiceValue]
     const choiceLabel = unEntity(thisChoice.label)
-    let choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
+    var choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
 
-    if (useNumbers == 1) {
+    if (useNumbers === 1) {
       choiceItem += '<span id="rank" dir="auto"></span>. '
     }
 
@@ -118,9 +118,9 @@ function unEntity (str) {
 }
 
 function setRanks () {
-  if (useNumbers == 1) {
+  if (useNumbers === 1) {
     rankSpans = choicesHolder.querySelectorAll('#rank')
-    for (let r = 0; r < numChoices; r++) {
+    for (var r = 0; r < numChoices; r++) {
       rankSpans[r].innerHTML = (r + 1)
     }
   }
