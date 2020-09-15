@@ -20,8 +20,8 @@ hint.innerHTML = unEntity(fieldProperties.HINT)
 // This creates an object of the choices so they can later be displayed in the proper order.
 var choicesObj = {}
 for (var c = 0; c < numChoices; c++) {
-  const value = choices[c].CHOICE_VALUE
-  const label = choices[c].CHOICE_LABEL
+  var value = choices[c].CHOICE_VALUE
+  var label = choices[c].CHOICE_LABEL
   choicesObj[value] = {
     index: c,
     label: label
@@ -80,9 +80,9 @@ function dispChoices (orderStart) {
   }
   // Used to display the choices in the correct order
   for (var r = 0; r < numChoices; r++) {
-    const choiceValue = orderStart[r]
-    const thisChoice = choicesObj[choiceValue]
-    const choiceLabel = unEntity(thisChoice.label)
+    var choiceValue = orderStart[r]
+    var thisChoice = choicesObj[choiceValue]
+    var choiceLabel = unEntity(thisChoice.label)
     var choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
 
     if (useNumbers === 1) {
