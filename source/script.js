@@ -21,10 +21,10 @@ hint.innerHTML = unEntity(fieldProperties.HINT)
 var choicesObj = {}
 for (var c = 0; c < numChoices; c++) {
   var value = choices[c].CHOICE_VALUE
-  var label = choices[c].CHOICE_LABEL
+  var choiceLabel = choices[c].CHOICE_LABEL
   choicesObj[value] = {
     index: c,
-    label: label
+    label: choiceLabel
   }
 }
 
