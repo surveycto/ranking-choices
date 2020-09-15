@@ -8,13 +8,13 @@
 
 ## Description
 
-*Requires at least Android 7 or iOS 13 to work in SurveyCTO Collect mobile.*
+*Requires at least Android 7 or iOS 13 to work on SurveyCTO Collect.*
 
 Use this field plug-in so enumerators can drag to rank choices. Define your choices like you usually would, attach this field plug-in, and you're all set!
 
 [![Download now](extras/other-images/download-button.png)](https://github.com/surveycto/ranking-choices/raw/master/rankingchoices.fieldplugin.zip)
 
-### Feature list
+### Features
 
 * Ranking choices of a *select_multiple* field using drag-and-drop
 * Auto-numbering of choices when specified (see [Parameters](#parameters))
