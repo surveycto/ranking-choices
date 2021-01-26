@@ -18,8 +18,9 @@ label.innerHTML = unEntity(fieldProperties.LABEL)
 hint.innerHTML = unEntity(fieldProperties.HINT)
 
 var allChoiceValues = []
-for (var choice in choices) {
-  allChoiceValues.push(choice.CHOICE_VALUE)
+for (var c in choices) {
+  var choice = choices[c]
+  allChoiceValues.push(String(choice.CHOICE_VALUE))
 }
 
 // This creates an object of the choices so they can later be displayed in the proper order.
@@ -96,20 +97,31 @@ function dispChoices (orderStart) {
     }
     orderStartSpaces = orderStart.join(' ')
   }
+
+  var orderStartLength = orderStart.length
   // Used to display the choices in the correct order
-  for (var c = 0; c < orderStart; c++) {
+  for (var c = 0; c < orderStartLength; c++) {
     var choiceValue = orderStart[c]
-    if (choiceValue in allChoiceValues) { // Skip those that may have been removed due to choice filtering
+    if (allChoiceValues.includes(choiceValue)) { // Skip those that may have been removed due to choice filtering
       var choiceItem = createChoice(choiceValue)
       choicesHolder.innerHTML += choiceItem
     }
   }
 
+  console.log('Setting up choices that were not in "orderStart" orderStart:')
+  console.log(orderStart)
   for (var c = 0; c < numChoices; c++) {
     var choiceValue = allChoiceValues[c]
-    if (!(choiceValue in orderStartSpaces)) { // Add choices that may have been added due to choice filtering
+    console.log('On choice value:')
+    console.log(choiceValue)
+    console.log(orderStart.includes(choiceValue))
+    console.log(!orderStart.includes(choiceValue))
+    if (!orderStart.includes(choiceValue)) { // Add choices that may have been added due to choice filtering
       var choiceItem = createChoice(choiceValue)
       choicesHolder.innerHTML += choiceItem
+      console.log('Added')
+    } else {
+      console.log('Not found')
     }
   }
 }
