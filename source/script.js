@@ -17,6 +17,11 @@ if (useNumbers == null) {
 label.innerHTML = unEntity(fieldProperties.LABEL)
 hint.innerHTML = unEntity(fieldProperties.HINT)
 
+var allChoiceValues = []
+for (var choice in choices) {
+  allChoiceValues.push(choice.CHOICE_VALUE)
+}
+
 // This creates an object of the choices so they can later be displayed in the proper order.
 var choicesObj = {}
 for (var c = 0; c < numChoices; c++) {
@@ -70,6 +75,19 @@ document.addEventListener('mousedown', function () { // This removes the blue bo
   choicesHolder.classList.remove('hovering')
 })
 
+function createChoice (choiceValue) {
+  var thisChoice = choicesObj[choiceValue]
+  var choiceLabel = unEntity(thisChoice.label)
+  var choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
+
+  if (useNumbers === 1) {
+    choiceItem += '<span id="rank" dir="auto"></span>. '
+  }
+
+  choiceItem += choiceLabel + '</li>'
+  return choiceItem
+}
+
 function dispChoices (orderStart) {
   if (orderStart == null) { // If empty (no order set yet), then should show in original order
     orderStart = []
@@ -79,19 +97,21 @@ function dispChoices (orderStart) {
     orderStartSpaces = orderStart.join(' ')
   }
   // Used to display the choices in the correct order
-  for (var r = 0; r < numChoices; r++) {
-    var choiceValue = orderStart[r]
-    var thisChoice = choicesObj[choiceValue]
-    var choiceLabel = unEntity(thisChoice.label)
-    var choiceItem = '<li class="list-item" data-id="' + choiceValue + '">'
-
-    if (useNumbers === 1) {
-      choiceItem += '<span id="rank" dir="auto"></span>. '
+  for (var c = 0; c < orderStart; c++) {
+    var choiceValue = orderStart[c]
+    if (choiceValue in allChoiceValues) { // Skip those that may have been removed due to choice filtering
+      var choiceItem = createChoice(choiceValue)
+      choicesHolder.innerHTML += choiceItem
     }
+  }
 
-    choiceItem += choiceLabel + '</li>'
-    choicesHolder.innerHTML += choiceItem
-  } // End FOR to display choices in the correct order
+  for (var c = 0; c < numChoices; c++) {
+    var choiceValue = allChoiceValues[c]
+    if (!(choiceValue in orderStartSpaces)) { // Add choices that may have been added due to choice filtering
+      var choiceItem = createChoice(choiceValue)
+      choicesHolder.innerHTML += choiceItem
+    }
+  }
 }
 
 function clearAnswer () {
