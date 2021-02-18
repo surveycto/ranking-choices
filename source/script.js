@@ -119,20 +119,11 @@ function dispChoices (orderStart) {
     }
   }
 
-  console.log('Setting up choices that were not in "orderStart" orderStart:')
-  console.log(orderStart)
   for (var c = 0; c < numChoices; c++) {
     var choiceValue = allChoiceValues[c]
-    console.log('On choice value:')
-    console.log(choiceValue)
-    console.log(orderStart.includes(choiceValue))
-    console.log(!orderStart.includes(choiceValue))
     if (!orderStart.includes(choiceValue)) { // Add choices that may have been added due to choice filtering
       var choiceItem = createChoice(choiceValue)
       choicesHolder.innerHTML += choiceItem
-      console.log('Added')
-    } else {
-      console.log('Not found')
     }
   }
 }
