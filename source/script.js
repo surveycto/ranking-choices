@@ -102,10 +102,6 @@ document.addEventListener('mousemove', function () {
   }
 })
 
-document.addEventListener('mousedown', function () { // This removes the blue border during moving. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
-  // choicesHolder.classList.remove('hovering')
-})
-
 function createChoice (choiceValue) {
   var thisChoice = choicesObj[choiceValue]
   var choiceLabel = unEntity(thisChoice.label)
