@@ -36,8 +36,19 @@ for (var c = 0; c < numChoices; c++) {
 
 if (orderStartSpaces == null) {
   dispChoices()
-} else {
-  dispChoices(orderStartSpaces.match(/[^ ]+/g)) // Retrieves order of the choices so far
+} else { // Remove choices that are not valid choices
+  var orderStartList = orderStartSpaces.match(/[^ ]+/g)
+  var orderStartListHold = []
+  var numStart = orderStartList.length
+  for (var n = 0; n < numStart; n++) {
+    var thisChoice = orderStartList[n]
+    if (allChoiceValues.indexOf(thisChoice) !== -1) {
+      orderStartListHold.push(thisChoice)
+    }
+  }
+  orderStartList = orderStartListHold
+  dispChoices(orderStartList) // Retrieves order of the choices so far
+  orderStartSpaces = orderStartList.join(' ')
 }
 rankSpans = choicesHolder.querySelectorAll('#rank')
 setRanks()
