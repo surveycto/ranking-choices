@@ -63,7 +63,7 @@ var lastDragged
 Sortable.create(choicesHolder,
   {
     group: 'choices',
-    animation: 150,
+    animation: 300,
     ghostClass: 'moving-choice',
 
     store: {
