@@ -75,6 +75,9 @@ Sortable.create(choicesHolder,
 
     },
     onMove: function (sortable) {
+      if (lastDragged != null) {
+        lastDragged.classList.remove('last-moved')
+      }
       lastDragged = sortable.dragged
     },
     onEnd: function (sortable) {
