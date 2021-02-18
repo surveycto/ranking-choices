@@ -41,7 +41,7 @@ body{
     border: 1px solid rgba(0,0,0,.125);
 }
 
-.hovering .list-item:hover {
+.hovering .list-item:hover, .last-moved {
     border: solid 2px #047cc2;
     z-index: 1;
 }

@@ -50,6 +50,7 @@ if (orderStartSpaces == null) {
   dispChoices(orderStartList) // Retrieves order of the choices so far
   orderStartSpaces = orderStartList.join(' ')
 }
+var liContainers = choicesHolder.querySelectorAll('li')
 rankSpans = choicesHolder.querySelectorAll('#rank')
 setRanks()
 
@@ -58,6 +59,7 @@ if (getPluginParameter('allowdef') === 1) {
 }
 
 var order
+var lastDragged
 Sortable.create(choicesHolder,
   {
     group: 'choices',
@@ -69,22 +71,36 @@ Sortable.create(choicesHolder,
       set: function (sortable) {
         order = sortable.toArray()
         getOrder()
-        choicesHolder.classList.add('hovering')
       }
 
+    },
+    onMove: function (sortable) {
+      lastDragged = sortable.dragged
+    },
+    onEnd: function (sortable) {
+      choicesHolder.classList.remove('hovering')
+      lastDragged.classList.add('last-moved')
     }
   })
 
 var getOrder = function () {
-  // conver order arry to space separated list
+  // convert order array to space-separated list
   var spaceList = order.join(' ')
   setMetaData(spaceList)
   setAnswer(spaceList)
   setRanks()
 }
 
+// Remove blue border when ready to move again
+document.addEventListener('mousemove', function () {
+  choicesHolder.classList.add('hovering')
+  if (lastDragged != null) {
+    lastDragged.classList.remove('last-moved')
+  }
+})
+
 document.addEventListener('mousedown', function () { // This removes the blue border during moving. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
-  choicesHolder.classList.remove('hovering')
+  // choicesHolder.classList.remove('hovering')
 })
 
 function createChoice (choiceValue) {
