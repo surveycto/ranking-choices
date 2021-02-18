@@ -36,9 +36,21 @@ for (var c = 0; c < numChoices; c++) {
 
 if (orderStartSpaces == null) {
   dispChoices()
-} else {
-  dispChoices(orderStartSpaces.match(/[^ ]+/g)) // Retrieves order of the choices so far
+} else { // Remove choices that are not valid choices
+  var orderStartList = orderStartSpaces.match(/[^ ]+/g)
+  var orderStartListHold = []
+  var numStart = orderStartList.length
+  for (var n = 0; n < numStart; n++) {
+    var thisChoice = orderStartList[n]
+    if (allChoiceValues.indexOf(thisChoice) !== -1) {
+      orderStartListHold.push(thisChoice)
+    }
+  }
+  orderStartList = orderStartListHold
+  dispChoices(orderStartList) // Retrieves order of the choices so far
+  orderStartSpaces = orderStartList.join(' ')
 }
+var liContainers = choicesHolder.querySelectorAll('li')
 rankSpans = choicesHolder.querySelectorAll('#rank')
 setRanks()
 
@@ -47,10 +59,11 @@ if (getPluginParameter('allowdef') === 1) {
 }
 
 var order
+var lastDragged
 Sortable.create(choicesHolder,
   {
     group: 'choices',
-    animation: 150,
+    animation: 300,
     ghostClass: 'moving-choice',
 
     store: {
@@ -58,22 +71,35 @@ Sortable.create(choicesHolder,
       set: function (sortable) {
         order = sortable.toArray()
         getOrder()
-        choicesHolder.classList.add('hovering')
       }
 
+    },
+    onMove: function (sortable) {
+      if (lastDragged != null) {
+        lastDragged.classList.remove('last-moved')
+      }
+      lastDragged = sortable.dragged
+    },
+    onEnd: function (sortable) {
+      choicesHolder.classList.remove('hovering')
+      lastDragged.classList.add('last-moved')
     }
   })
 
 var getOrder = function () {
-  // conver order arry to space separated list
+  // convert order array to space-separated list
   var spaceList = order.join(' ')
   setMetaData(spaceList)
   setAnswer(spaceList)
   setRanks()
 }
 
-document.addEventListener('mousedown', function () { // This removes the blue border during moving. Otherwise, it appears in seemingly-random spots. It is removed when the Sortable is done.
-  choicesHolder.classList.remove('hovering')
+// Remove blue border when ready to move again
+document.addEventListener('mousemove', function () {
+  choicesHolder.classList.add('hovering')
+  if (lastDragged != null) {
+    lastDragged.classList.remove('last-moved')
+  }
 })
 
 function createChoice (choiceValue) {
@@ -108,20 +134,11 @@ function dispChoices (orderStart) {
     }
   }
 
-  console.log('Setting up choices that were not in "orderStart" orderStart:')
-  console.log(orderStart)
   for (var c = 0; c < numChoices; c++) {
     var choiceValue = allChoiceValues[c]
-    console.log('On choice value:')
-    console.log(choiceValue)
-    console.log(orderStart.includes(choiceValue))
-    console.log(!orderStart.includes(choiceValue))
     if (!orderStart.includes(choiceValue)) { // Add choices that may have been added due to choice filtering
       var choiceItem = createChoice(choiceValue)
       choicesHolder.innerHTML += choiceItem
-      console.log('Added')
-    } else {
-      console.log('Not found')
     }
   }
 }
