@@ -1,4 +1,3 @@
-
 # Ranking choices
 
 ![](extras/preview-images/main.jpg)
