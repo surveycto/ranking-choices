@@ -10,7 +10,7 @@
 
 *Requires at least Android 7 or iOS 13 to work on SurveyCTO Collect.*
 
-Use this field plug-in so enumerators can drag to rank choices. Define your choices like you usually would, attach this field plug-in, and you're all set!
+Use this field plug-in to allow drag-and-drop ranking of choices. Define choice lists like you usually would, attach this field plug-in, and you're all set.
 
 [![Download now](extras/other-images/download-button.png)](https://github.com/surveycto/ranking-choices/raw/master/rankingchoices.fieldplugin.zip)
 
@@ -50,7 +50,7 @@ You can use the [selected-at()](https://docs.surveycto.com/02-designing-forms/01
 
 There are two parameters, both of which are optional:
 
-`alloqdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. If the parameter is any other value, or it is not included, at least one change needs to occur. This change can be as simple as tapping a choice so it stays in the same place.  
+`allowdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. If the parameter is any other value, or it is not included, at least one change needs to occur. This change can be as simple as tapping a choice so it stays in the same place.  
 `numbers`:  If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.
 
 ### Default SurveyCTO feature support
