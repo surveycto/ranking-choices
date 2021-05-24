@@ -82,9 +82,8 @@ Sortable.create(choicesHolder,
     },
     onEnd: function (sortable) {
       choicesHolder.classList.remove('hovering')
-      if (lastDragged != null) {
-        lastDragged.classList.add('last-moved')
-      }
+      lastDragged = sortable.item
+      lastDragged.classList.add('last-moved')
     }
   })
 
