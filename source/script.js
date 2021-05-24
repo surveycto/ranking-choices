@@ -1,4 +1,4 @@
-/* global setAnswer, fieldProperties, getMetaData, setMetaData, getPluginParameter, Sortable, setFocus */
+/* global setAnswer, fieldProperties, getMetaData, setMetaData, getPluginParameter, Sortable */
 
 var label = document.querySelector('.label')
 var hint = document.querySelector('.hint')
@@ -152,7 +152,6 @@ function clearAnswer () {
 function handleConstraintMessage (message) {
   formGroup.classList.add('has-error')
   controlMessage.innerHTML = message
-  setFocus()
 }
 
 function handleRequiredMessage (message) {
