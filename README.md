@@ -19,7 +19,7 @@ Use this field plug-in to allow drag-and-drop ranking of choices. Define choice 
 * Ranking choices of a *select_multiple* field using drag-and-drop
 * Auto-numbering of choices when specified (see [Parameters](#parameters))
 * Re-numbering as choices are moved
-* Can specify if at least once change needs to be made before continuing to the next field (see [Parameters](#parameters))
+* Enumerator cannot move forward until at least one change is made, even if they change it back (see [Parameters](#parameters))
 
 This field plug-in also inherits functionality from the [baseline-select_multiple](https://github.com/surveycto/baseline-select_multiple) field plug-in.
 
@@ -50,7 +50,10 @@ You can use the [selected-at()](https://docs.surveycto.com/02-designing-forms/01
 
 There are two parameters, both of which are optional:
 
-`allowdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. If the parameter is any other value, or it is not included, at least one change needs to occur. This change can be as simple as tapping a choice so it stays in the same place.  
+`allowdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. This is a risky design, because the enumerator could go to the next field without actually checking the order of the choices.
+
+If this parameter is any other value, or if it is not included, at least one change needs to occur before moving on to the next field. This change can be as simple as wiggling a choice (tap-and-hold, and move it slightly so its position does not change) so it stays in the same place. If you use `allowdef=0`, be sure to include a *constraint message* to help the user of your form understand what to do; otherwise, they will get the standard constraint message, “Sorry, that response is required”, which can be confusing.
+
 `numbers`:  If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.
 
 ### Default SurveyCTO feature support
