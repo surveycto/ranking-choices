@@ -137,7 +137,7 @@ function dispChoices (orderStart) {
 
   for (var c = 0; c < numChoices; c++) {
     var choiceValue = allChoiceValues[c]
-    if (!orderStart.includes(choiceValue)) { // Add choices that may have been added due to choice filtering
+    if (!orderStart.includes(choiceValue)) { // Re-dd choices that have been re-added after being skipped due to choice filtering
       var choiceItem = createChoice(choiceValue)
       choicesHolder.innerHTML += choiceItem
     }
