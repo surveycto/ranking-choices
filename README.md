@@ -43,18 +43,12 @@ You can use the [selected-at()](https://docs.surveycto.com/02-designing-forms/01
 
 ### Parameters
 
-|Name|Description|Default|
-|---|---|---|
-|`allowdef` (optional)|Whether to allow the default display without making changes|0|
-|`numbers` (optional)|Whether to number the rankings of each choice|1|
-
 There are two parameters, both of which are optional:
 
-`allowdef`: If this parameter has a value of 1, then the enumerator can swipe to the next field without making any changes. This is a risky design, because the enumerator could go to the next field without actually checking the order of the choices.
-
-If this parameter is any other value, or if it is not included, at least one change needs to occur before moving on to the next field. This change can be as simple as wiggling a choice (tap-and-hold, and move it slightly so its position does not change) so it stays in the same place. If you use `allowdef=0`, be sure to include a *constraint message* to help the user of your form understand what to do; otherwise, they will get the standard constraint message, “Sorry, that response is required”, which can be confusing.
-
-`numbers`:  If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.
+|Name|Description|Default|
+|---|---|---|
+|`allowdef` (optional)|<p>Whether to allow the default display without making changes.</p><p>If this parameter has a value of `1`, then the enumerator can swipe to the next field without making any changes. This is a risky design, because the enumerator could go to the next field without actually checking the order of the choices.</p><p>If this parameter is any other value, or if it is not included, at least one change needs to occur before moving on to the next field. This change can be as simple as wiggling a choice (tap-and-hold, and move it slightly so its position does not change) so it stays in the same place.</p><p>If you do not use this parameter, it is a good idea to include a *required message* to help the enumerator understand what to do; otherwise, they will get the standard constraint message, “Sorry, that response is required”, which can be confusing.</p>|0|
+|`numbers` (optional)|<p>Whether to number the rankings of each choice</p><p>If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.</p>|1|
 
 ### Default SurveyCTO feature support
 
