@@ -54,7 +54,7 @@ var liContainers = choicesHolder.querySelectorAll('li')
 rankSpans = choicesHolder.querySelectorAll('#rank')
 setRanks()
 
-if (getPluginParameter('allowdef') === 1) {
+if ((orderStartSpaces != null) || (getPluginParameter('allowdef') === 1)) {
   setAnswer(orderStartSpaces)
 }
 
