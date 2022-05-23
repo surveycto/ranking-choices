@@ -36,6 +36,9 @@ for (var c = 0; c < numChoices; c++) {
 
 if (orderStartSpaces == null) {
   dispChoices()
+  if (getPluginParameter('allowdef') === 1) {
+    setAnswer(orderStartSpaces)
+  }
 } else { // Remove choices that are not valid choices
   var orderStartList = orderStartSpaces.match(/[^ ]+/g)
   var orderStartListHold = []
@@ -48,15 +51,20 @@ if (orderStartSpaces == null) {
   }
   orderStartList = orderStartListHold
   dispChoices(orderStartList) // Retrieves order of the choices so far
-  orderStartSpaces = orderStartList.join(' ')
-}
-var liContainers = choicesHolder.querySelectorAll('li')
-rankSpans = choicesHolder.querySelectorAll('#rank')
-setRanks()
 
-if ((orderStartSpaces != null) || (getPluginParameter('allowdef') === 1)) {
+  var hold = []
+  for (var o; o < orderStartList.length; o++) {
+    var item = orderStartList[o]
+    if (orderStartList.indexOf(item) !== -1) {
+      hold.push(item)
+    }
+  }
+  orderStartList = hold
+  orderStartSpaces = orderStartList.join(' ')
   setAnswer(orderStartSpaces)
 }
+rankSpans = choicesHolder.querySelectorAll('#rank')
+setRanks()
 
 var order
 var lastDragged
