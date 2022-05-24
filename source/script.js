@@ -34,13 +34,16 @@ for (var c = 0; c < numChoices; c++) {
   }
 }
 
-if (orderStartSpaces == null) {
+if (orderStartSpaces == null) { // True if this is the first time the field is opened, so no need to filter based on previous order
   dispChoices()
-} else { // Remove choices that are not valid choices
-  var orderStartList = orderStartSpaces.match(/[^ ]+/g)
+  if (getPluginParameter('allowdef') === 1) { // Set answer, since default order is allowed
+    setAnswer(orderStartSpaces)
+  }
+} else { // Remove choices that are not valid choices anymore due to choice filtering
+  var orderStartList = orderStartSpaces.match(/[^ ]+/g) // Get list of currently selected choices
   var orderStartListHold = []
   var numStart = orderStartList.length
-  for (var n = 0; n < numStart; n++) {
+  for (var n = 0; n < numStart; n++) { // Check each choice, and make sure it is still a valid choice
     var thisChoice = orderStartList[n]
     if (allChoiceValues.indexOf(thisChoice) !== -1) {
       orderStartListHold.push(thisChoice)
@@ -48,15 +51,10 @@ if (orderStartSpaces == null) {
   }
   orderStartList = orderStartListHold
   dispChoices(orderStartList) // Retrieves order of the choices so far
-  orderStartSpaces = orderStartList.join(' ')
+  setAnswer(orderStartSpaces) // Set answer based on currently selected choices in the correct order
 }
-var liContainers = choicesHolder.querySelectorAll('li')
 rankSpans = choicesHolder.querySelectorAll('#rank')
 setRanks()
-
-if (getPluginParameter('allowdef') === 1) {
-  setAnswer(orderStartSpaces)
-}
 
 var order
 var lastDragged
