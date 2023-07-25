@@ -87,9 +87,9 @@ Sortable.create(choicesHolder,
 
 var getOrder = function () {
   // convert order array to space-separated list
-  var spaceList = order.join(' ')
-  setMetaData(spaceList)
-  setAnswer(spaceList)
+  orderStartSpaces = order.join(' ')
+  setMetaData(orderStartSpaces)
+  setAnswer(orderStartSpaces)
   setRanks()
 }
 
