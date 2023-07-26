@@ -87,9 +87,9 @@ Sortable.create(choicesHolder,
 
 var getOrder = function () {
   // convert order array to space-separated list
-  var spaceList = order.join(' ')
-  setMetaData(spaceList)
-  setAnswer(spaceList)
+  orderStartSpaces = order.join(' ')
+  setMetaData(orderStartSpaces)
+  setAnswer(orderStartSpaces)
   setRanks()
 }
 
@@ -114,13 +114,14 @@ function createChoice (choiceValue) {
   return choiceItem
 }
 
+
+// Used to display the initial choice list. If "orderStart" is provided, it is because the field previously had a value, so need to display the choices in that order. If "orderStart" has no value, then a value has not been set yet.
 function dispChoices (orderStart) {
   if (orderStart == null) { // If empty (no order set yet), then should show in original order
     orderStart = []
     for (var i = 0; i < numChoices; i++) {
       orderStart.push(choices[i].CHOICE_VALUE)
     }
-    orderStartSpaces = orderStart.join(' ')
   }
 
   var orderStartLength = orderStart.length
@@ -135,11 +136,13 @@ function dispChoices (orderStart) {
 
   for (var c = 0; c < numChoices; c++) {
     var choiceValue = allChoiceValues[c]
-    if (!orderStart.includes(choiceValue)) { // Re-dd choices that have been re-added after being skipped due to choice filtering
+    if (!orderStart.includes(choiceValue)) { // Re-add choices that have been re-added after being skipped due to choice filtering
+      orderStart.push(choiceValue)
       var choiceItem = createChoice(choiceValue)
       choicesHolder.innerHTML += choiceItem
     }
   }
+  orderStartSpaces = orderStart.join(' ')
 }
 
 function clearAnswer () {
