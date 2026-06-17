@@ -10,19 +10,6 @@ var rankSpans
 var numChoices = choices.length
 var orderStartSpaces = getMetaData()
 
-// A dynamic default value, calculation, or preloaded value populates the field's
-// answer (CURRENT_ANSWER) rather than the plug-in metadata. So when there is no
-// saved plug-in state yet, seed the initial ranked order from the current answer.
-// (For a select_multiple, CURRENT_ANSWER is already a space-separated list.)
-var seededFromAnswer = false
-if (orderStartSpaces == null || orderStartSpaces === '') {
-  var preloadedAnswer = fieldProperties.CURRENT_ANSWER
-  if (preloadedAnswer != null && preloadedAnswer !== '') {
-    orderStartSpaces = preloadedAnswer
-    seededFromAnswer = true
-  }
-}
-
 var useNumbers = getPluginParameter('numbers')
 if (useNumbers == null) {
   useNumbers = 1
@@ -68,12 +55,6 @@ if (orderStartSpaces == null) { // True if this is the first time the field is o
   setAnswer(orderStartSpaces) // Set answer based on currently selected choices in the correct order
 }
 
-// If we seeded the order from the preloaded answer, persist it so later renders
-// (resume/edit/go-back) restore from metadata. dispChoices() has already reassigned
-// orderStartSpaces to the filter-cleaned order by this point.
-if (seededFromAnswer) {
-  setMetaData(orderStartSpaces)
-}
 rankSpans = choicesHolder.querySelectorAll('.rank')
 setRanks()
 
