@@ -36,7 +36,22 @@ for (var c = 0; c < numChoices; c++) {
 }
 
 if (orderStartSpaces == null) { // True if this is the first time the field is opened, so no need to filter based on previous order
-  dispChoices()
+  // Optional starting order from the form, e.g. appearance custom-rankingchoices(default=${q1}).
+  // The form resolves the parameter before the plug-in loads, so a calculate field's
+  // space-separated list of choice values arrives here as a plain string.
+  var seedOrder = getPluginParameter('default')
+  if (seedOrder != null && String(seedOrder) !== '') {
+    var seedList = String(seedOrder).match(/[^ ]+/g) || []
+    var seedListValid = []
+    for (var s = 0; s < seedList.length; s++) { // Keep only valid, non-duplicate choice values
+      if (allChoiceValues.indexOf(seedList[s]) !== -1 && seedListValid.indexOf(seedList[s]) === -1) {
+        seedListValid.push(seedList[s])
+      }
+    }
+    dispChoices(seedListValid) // Display in the seeded order; dispChoices appends any choices missing from the seed
+  } else {
+    dispChoices() // No seed: show in the original choice-list order
+  }
   if (Number(getPluginParameter('allowdef')) === 1) { // Set answer, since default order is allowed
     setAnswer(orderStartSpaces)
   }

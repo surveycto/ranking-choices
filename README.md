@@ -43,11 +43,12 @@ You can use the [selected-at()](https://docs.surveycto.com/02-designing-forms/01
 
 ### Parameters
 
-There are two parameters, both of which are optional:
+There are three parameters, all of which are optional:
 
 |Name|Description|Default|
 |---|---|---|
 |`allowdef` (optional)|<p>Whether to allow the default display without making changes.</p><p>If this parameter has a value of `1`, then the enumerator can swipe to the next field without making any changes. This is a risky design, because the enumerator could go to the next field without actually checking the order of the choices.</p><p>If this parameter is any other value, or if it is not included, at least one change needs to occur before moving on to the next field. This change can be as simple as wiggling a choice (tap-and-hold, and move it slightly so its position does not change) so it stays in the same place.</p><p>If you do not use this parameter, it is a good idea to include a *required message* to help the enumerator understand what to do; otherwise, they will get the standard constraint message, “Sorry, that response is required”, which can be confusing.</p>|0|
+|`default` (optional)|<p>An initial ranked order for the choices, given as a space-separated list of choice *values* (for example, `3 2 4 1`).</p><p>The form resolves this parameter before the plug-in loads, so the order can come from a calculate field or any expression — for example `default=${q1}` or `default='3 2 4 1'`. Values that are not valid choices (and any duplicates) are ignored, and any choices missing from the list are appended in their original order, so a partial list is fine.</p><p>Pair this with `allowdef=1` to let the enumerator accept the seeded order without making a change; otherwise the enumerator must still make at least one change before moving on. If the expression uses `random()` or other volatile inputs, wrap it in `once()` so the order does not change if the enumerator navigates back before interacting.</p>|*(original choice-list order)*|
 |`numbers` (optional)|<p>Whether to number the rankings of each choice</p><p>If this parameter has a value of 1, or if it is not included, then choices will have numbers ranking them from 1 to x (x being the number of choices). The numbers will stay in order even as the choices are moved around. If the parameter has a value of 0, then these numbers will not be shown.</p>|1|
 
 ### Default SurveyCTO feature support
