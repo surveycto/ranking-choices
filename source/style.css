@@ -4,20 +4,20 @@ body{
 }
 
 .label { /*Label*/
-    width: 100%;
-    margin-bottom: 15px;
     font-weight: 400;
-    line-height: 1.42857143;
     display: inline-block;
+    line-height: 1.42857143;
+    margin-bottom: 15px;
     max-width: 100%;
+    width: 100%;
 }
 
 .hint {/*Hint*/
-    margin-top: 5px;
-    font-size: 12px;
-    display: block;
-    margin-bottom: 5px;
     color: #737373;
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     font-style: italic;
     font-weight: 300;
 }
@@ -33,12 +33,12 @@ body{
 }
 
 .list-item {
-    position: relative;
-    display: block;
-    padding: .75rem 1.25rem;
-    margin-bottom: -1px;
     background-color: #fff;
     border: 1px solid rgba(0,0,0,.125);
+    display: block;
+    margin-bottom: -1px;
+    padding: .75rem 1.25rem;
+    position: relative;
 }
 
 .hovering .list-item:hover, .last-moved {
@@ -52,10 +52,10 @@ body{
 
 .has-error em.control-message { /*Error area when there is an error*/
     background: #f56954;
-    display: block;
-    width: 96%;
     color: #FFF;
+    display: block;
     padding: 5px 10px;
+    width: 96%;
 }
 
 .form-group.has-error .form-control { /*Input box when there is an error*/
