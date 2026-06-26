@@ -36,27 +36,28 @@ for (var c = 0; c < numChoices; c++) {
 }
 
 if (orderStartSpaces == null) { // True if this is the first time the field is opened, so no need to filter based on previous order
+  var resolvedOrder // dispChoices() returns the order it actually rendered; capture it instead of reading back the mutated global
   // Optional starting order from the form, e.g. appearance custom-rankingchoices(default=${q1}).
   // The form resolves the parameter before the plug-in loads, so a calculate field's
   // space-separated list of choice values arrives here as a plain string.
   var seedOrder = getPluginParameter('default')
   if (seedOrder != null && String(seedOrder) !== '') {
-    var seedList = String(seedOrder).match(/[^ ]+/g) || []
+    var seedList = String(seedOrder).match(/\S+/g) || []
     var seedListValid = []
     for (var s = 0; s < seedList.length; s++) { // Keep only valid, non-duplicate choice values
       if (allChoiceValues.indexOf(seedList[s]) !== -1 && seedListValid.indexOf(seedList[s]) === -1) {
         seedListValid.push(seedList[s])
       }
     }
-    dispChoices(seedListValid) // Display in the seeded order; dispChoices appends any choices missing from the seed
+    resolvedOrder = dispChoices(seedListValid) // Display in the seeded order; dispChoices appends any choices missing from the seed
   } else {
-    dispChoices() // No seed: show in the original choice-list order
+    resolvedOrder = dispChoices() // No seed: show in the original choice-list order
   }
   if (Number(getPluginParameter('allowdef')) === 1) { // Set answer, since default order is allowed
-    setAnswer(orderStartSpaces)
+    setAnswer(resolvedOrder) // Use the order dispChoices resolved and returned, not the side-effect global
   }
 } else { // Remove choices that are not valid choices anymore due to choice filtering
-  var orderStartList = orderStartSpaces.match(/[^ ]+/g) || [] // Get list of currently selected choices (guard against empty metadata)
+  var orderStartList = orderStartSpaces.match(/\S+/g) || [] // Get list of currently selected choices (guard against empty metadata)
   var orderStartListHold = []
   var numStart = orderStartList.length
   for (var n = 0; n < numStart; n++) { // Check each choice, and make sure it is still a valid choice
@@ -66,8 +67,8 @@ if (orderStartSpaces == null) { // True if this is the first time the field is o
     }
   }
   orderStartList = orderStartListHold
-  dispChoices(orderStartList) // Retrieves order of the choices so far
-  setAnswer(orderStartSpaces) // Set answer based on currently selected choices in the correct order
+  var reconciledOrder = dispChoices(orderStartList) // Retrieves order of the choices so far
+  setAnswer(reconciledOrder) // Set answer based on currently selected choices in the correct order
 }
 
 rankSpans = choicesHolder.querySelectorAll('.rank')
@@ -135,7 +136,6 @@ function createChoice (choiceValue) {
 
 // Used to display the initial choice list. If "orderStart" is provided, it is because the field previously had a value, so need to display the choices in that order. If "orderStart" has no value, then a value has not been set yet.
 function dispChoices (orderStart) {
-  choicesHolder.innerHTML = '' // Reset first so re-renders (e.g. from clearAnswer) replace the list instead of appending duplicates
   if (orderStart == null) { // If empty (no order set yet), then should show in original order
     orderStart = []
     for (var i = 0; i < numChoices; i++) {
@@ -143,13 +143,13 @@ function dispChoices (orderStart) {
     }
   }
 
+  var choicesHtml = ''
   var orderStartLength = orderStart.length
   // Used to display the choices in the correct order
   for (var c = 0; c < orderStartLength; c++) {
     var choiceValue = orderStart[c]
     if (allChoiceValues.includes(choiceValue)) { // Skip those that may have been removed due to choice filtering
-      var choiceItem = createChoice(choiceValue)
-      choicesHolder.innerHTML += choiceItem
+      choicesHtml += createChoice(choiceValue)
     }
   }
 
@@ -157,11 +157,12 @@ function dispChoices (orderStart) {
     var choiceValue = allChoiceValues[c]
     if (!orderStart.includes(choiceValue)) { // Re-add choices that have been re-added after being skipped due to choice filtering
       orderStart.push(choiceValue)
-      var choiceItem = createChoice(choiceValue)
-      choicesHolder.innerHTML += choiceItem
+      choicesHtml += createChoice(choiceValue)
     }
   }
+  choicesHolder.innerHTML = choicesHtml // Build the list as one string and assign once: replaces any prior render (no duplicate appends) and avoids re-parsing the DOM each iteration
   orderStartSpaces = orderStart.join(' ')
+  return orderStartSpaces // Return the resolved order so callers don't depend on the mutated global
 }
 
 function clearAnswer () {
